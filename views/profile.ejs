@@ -2,11 +2,11 @@
     <div class="right h-full flex-1 relative px-6">
         <div class="about px-20 py-5 flex items-center gap-6">
             <div class="profileImg h-[10.5vw] rounded-full overflow-hidden aspect-square">
-                <img class="h-full w-full object-cover" src="https://yt3.googleusercontent.com/ytc/AIdro_nLL25fDR5-cdL6TtITu9iVZxSvmIXk6buqstMq-aQ=s176-c-k-c0x00ffffff-no-rj" alt="">
+                <img class="h-full w-full object-cover" src="/uploads/images/<%=loggedUser.profileImg%>" alt="">
             </div>
             <div class="details">
-                <h1 class="text-4xl font-bold mb-2">Devraj Rathor 12 A</h1>
-                <p class="text-sm text-zinc-700 font-medium mb-2">@devrajrathor12a94</p>
+                <h1 class="text-4xl font-bold mb-2"><%=loggedUser.username%></h1>
+                <p class="text-sm text-zinc-700 font-medium mb-2"><%=loggedUser.channelName%></p>
                 <p class="text-sm text-zinc-700 font-medium mb-4">More about this channel <i class="ri-arrow-right-s-line"></i></p>
                 <button class="px-4 py-1.5 text-sm mr-2 captiliaze font-medium bg-zinc-200 rounded-3xl">Customise channel</button>
                 <button class="px-4 py-1.5 text-sm captiliaze font-medium bg-zinc-200 rounded-3xl">manage videos</button>
