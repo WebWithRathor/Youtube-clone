@@ -17,6 +17,13 @@
             background-color: transparent;
             display: none;
         }
+        .scrollbar::-webkit-scrollbar-thumb{
+            display: none;
+        }
+
+        video::-webkit-media-controls-enclosure {
+            display: none ;
+        }
 
         .bottom .left:hover::-webkit-scrollbar {
             display: initial;
@@ -88,16 +95,17 @@
                     <%}else{%>
                         <i class="ri-more-2-line hover:bg-zinc-100 rounded-full py-1.5 px-2.5 min-w-max"></i>
                         <a class="button google" href="/login/federated/google"><button
-                            class="flex items-center hover:bg-blue-100 hover:border-transparent text-blue-600 gap-1.5 border border-zinc-300 px-2.5 rounded-full">
-                            <i class="ri-account-circle-line text-2xl opacity-90 mt-[2px]"></i>
-                            <span class="text-sm font-medium">Sign in</span>
-                        </button></a>
+                                class="flex items-center hover:bg-blue-100 hover:border-transparent text-blue-600 gap-1.5 border border-zinc-300 px-2.5 rounded-full">
+                                <i class="ri-account-circle-line text-2xl opacity-90 mt-[2px]"></i>
+                                <span class="text-sm font-medium">Sign in</span>
+                            </button></a>
                         <%}%>
 
             </div>
 
         </div>
         <div class="bottom w-full h-[91vh] flex">
+            <% if (left) { %>
             <div class="left h-full overflow-y-auto md:w-60 w-10 shrink-0 py-1 border-b-1">
                 <div class="border-b-[1px] px-3 py-2">
                     <a href="/">
@@ -138,61 +146,17 @@
                 </div>
                 <%if(loggedUser) {%>
 
-                <div class="border-b-[1px] px-3 py-2">
-                    <a href="/you">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <h2 class="font-semibold text-md">You</h2>
-                            <i class="ri-arrow-right-s-line"></i>
-                        </div>
-                    </a>
-                    <a href="/channel">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <i class="ri-account-box-line text-xl"></i>
-                            <h2 class="md:block hidden">Channel</h2>
-                        </div>
-                    </a>
-                    <a href="/history">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <i class="ri-history-line text-xl"></i>
-                            <h2 class="md:block hidden">History</h2>
-                        </div>
-                    </a>
-                    <a href="/studio">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <i class="ri-video-line text-xl"></i>
-                            <h2 class="md:block hidden">Your Videos</h2>
-                        </div>
-                    </a>
-                    <a href="/playlist/some">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <i class="ri-time-line text-xl"></i>
-                            <h2 class="md:block hidden">Watch Later</h2>
-                        </div>
-                    </a>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-arrow-down-s-line text-xl"></i>
-                        <h2 class="md:block hidden">Show More</h2>
-                    </div>
-                </div>
-                <div class="border-b-[1px] px-3 py-2">
-                    <div class="flex cursor-pointer items-center rounded-lg gap-6 py-1.5 px-2">
-                        <h2 class="font-semibold text-md">Subscriptions</h2>
-                        <i class="ri-arrow-right-s-line"></i>
-                    </div>
-
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-arrow-down-s-line text-xl"></i>
-                        <h2>Show More</h2>
-                    </div>
-                </div>
-                <%}else{%>
                     <div class="border-b-[1px] px-3 py-2">
-                        
-                        
                         <a href="/you">
                             <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                                <i class="ri-video-line text-xl"></i>
-                                <h2 class="md:block hidden">You</h2>
+                                <h2 class="font-semibold text-md">You</h2>
+                                <i class="ri-arrow-right-s-line"></i>
+                            </div>
+                        </a>
+                        <a href="/channel">
+                            <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                <i class="ri-account-box-line text-xl"></i>
+                                <h2 class="md:block hidden">Channel</h2>
                             </div>
                         </a>
                         <a href="/history">
@@ -201,52 +165,104 @@
                                 <h2 class="md:block hidden">History</h2>
                             </div>
                         </a>
+                        <a href="/studio">
+                            <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                <i class="ri-video-line text-xl"></i>
+                                <h2 class="md:block hidden">Your Videos</h2>
+                            </div>
+                        </a>
+                        <a href="/playlist/some">
+                            <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                <i class="ri-time-line text-xl"></i>
+                                <h2 class="md:block hidden">Watch Later</h2>
+                            </div>
+                        </a>
+                        <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                            <i class="ri-arrow-down-s-line text-xl"></i>
+                            <h2 class="md:block hidden">Show More</h2>
+                        </div>
                     </div>
-                    <div class="border-b-[1px] px-8 py-4">
-                        <p class="text-sm leading-tight mb-3">Sign in to like videos, comment, and subscribe.</p>
-                        <a class="button google" href="/login/federated/google"><button
-                            class="flex items-center hover:bg-blue-100 hover:border-transparent text-blue-600 gap-1.5 border border-zinc-300 px-2.5 rounded-full">
-                            <i class="ri-account-circle-line text-2xl opacity-90 mt-[2px]"></i>
-                            <span class="text-sm font-medium">Sign in</span>
-                        </button></a>
-                    </div>
+                    <div class="border-b-[1px] px-3 py-2">
+                        <div class="flex cursor-pointer items-center rounded-lg gap-6 py-1.5 px-2">
+                            <h2 class="font-semibold text-md">Subscriptions</h2>
+                            <i class="ri-arrow-right-s-line"></i>
+                        </div>
 
-                    
-                <%}%>
-                <div class="border-b-[1px] px-3 py-2">
-                    <div class="flex items-center rounded-lg gap-6 py-1.5 px-2">
-                        <h2 class="font-semibold text-md">Explore</h2>
-                        <i class="ri-arrow-right-s-line"></i>
+                        <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                            <i class="ri-arrow-down-s-line text-xl"></i>
+                            <h2>Show More</h2>
+                        </div>
                     </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-fire-line text-xl"></i>
-                        <h2>Trending</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-shopping-bag-line text-xl"></i>
-                        <h2>Shopping</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-music-line text-xl"></i>
-                        <h2>Music</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-film-line text-xl"></i>
-                        <h2>Films</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-live-line text-xl"></i>
-                        <h2>Live</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-trophy-line text-xl"></i>
-                        <h2>Sports</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-arrow-down-s-line text-xl"></i>
-                        <h2>Show More</h2>
-                    </div>
-                </div>
+                    <%}else{%>
+                        <div class="border-b-[1px] px-3 py-2">
+
+
+                            <a href="/you">
+                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-video-line text-xl"></i>
+                                    <h2 class="md:block hidden">You</h2>
+                                </div>
+                            </a>
+                            <a href="/history">
+                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-history-line text-xl"></i>
+                                    <h2 class="md:block hidden">History</h2>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="border-b-[1px] px-8 py-4">
+                            <p class="text-sm leading-tight mb-3">Sign in to like videos, comment, and subscribe.</p>
+                            <a class="button google" href="/login/federated/google"><button
+                                    class="flex items-center hover:bg-blue-100 hover:border-transparent text-blue-600 gap-1.5 border border-zinc-300 px-2.5 rounded-full">
+                                    <i class="ri-account-circle-line text-2xl opacity-90 mt-[2px]"></i>
+                                    <span class="text-sm font-medium">Sign in</span>
+                                </button></a>
+                        </div>
+
+
+                        <%}%>
+                            <div class="border-b-[1px] px-3 py-2">
+                                <div class="flex items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <h2 class="font-semibold text-md">Explore</h2>
+                                    <i class="ri-arrow-right-s-line"></i>
+                                </div>
+                                <div
+                                    class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-fire-line text-xl"></i>
+                                    <h2>Trending</h2>
+                                </div>
+                                <div
+                                    class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-shopping-bag-line text-xl"></i>
+                                    <h2>Shopping</h2>
+                                </div>
+                                <div
+                                    class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-music-line text-xl"></i>
+                                    <h2>Music</h2>
+                                </div>
+                                <div
+                                    class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-film-line text-xl"></i>
+                                    <h2>Films</h2>
+                                </div>
+                                <div
+                                    class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-live-line text-xl"></i>
+                                    <h2>Live</h2>
+                                </div>
+                                <div
+                                    class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-trophy-line text-xl"></i>
+                                    <h2>Sports</h2>
+                                </div>
+                                <div
+                                    class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-arrow-down-s-line text-xl"></i>
+                                    <h2>Show More</h2>
+                                </div>
+                            </div>
 
 
             </div>
+        <%}%>

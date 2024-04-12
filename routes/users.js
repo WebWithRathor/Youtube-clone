@@ -22,6 +22,10 @@ const userSchema = mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:'video'
   }],
+  watchedlaterVideos:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'video'
+  }],
   uploadedVideos:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:'video'

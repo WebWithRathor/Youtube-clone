@@ -18,6 +18,10 @@
             background-color: transparent;
             display: none;
         }
+
+        video::-webkit-media-controls-enclosure {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -55,15 +59,17 @@
                     <div class="menu absolute top-full w-fit right-[24%] hidden  bg-white border">
                         <h1 class="py-1 px-3 text-start hover:bg-zinc-100" onclick="openOverlay('video')"><i
                                 class="ri-upload-line mr-3 text-zinc-400"></i>Upload a video</h1>
-                        <h1 class="py-1 px-3 text-start hover:bg-zinc-100" onclick="openOverlay('shorts')"><i class="ri-movie-2-line mr-3"></i>Upload a short</h1>
+                        <h1 class="py-1 px-3 text-start hover:bg-zinc-100" onclick="openOverlay('shorts')"><i
+                                class="ri-movie-2-line mr-3"></i>Upload a short</h1>
                         <h1 class="py-1 px-3 text-start hover:bg-zinc-100" onclick="openOverlay()"><i
                                 class="ri-rfid-line mr-3 text-zinc-400"></i>Go live</h1>
                     </div>
                 </button>
-
-                <div class="profileImg h-[2.1vw] rounded-full overflow-hidden aspect-square border">
-                    <img class="h-full w-full object-cover" src="/uploads/images/<%=loggedUser.profileImg%>" alt="">
-                </div>
+                <a href="/">
+                    <div class="profileImg h-[2.1vw] rounded-full overflow-hidden aspect-square border">
+                        <img class="h-full w-full object-cover" src="/uploads/images/<%=loggedUser.profileImg%>" alt="">
+                    </div>
+                </a>
             </div>
         </nav>
         <div class="bottom h-[91vh]  flex w-full">
@@ -115,7 +121,7 @@
                     <h1 class="py-2 flex items-center  border-b px-5"><i
                             class="ri-filter-3-line text-2xl text-zinc-400 mr-5"></i> Filter</h1>
                     <div class="filterdVideo px-5 overflow-y-auto h-[66.3vh] pb-5">
-                        <% if(loggedUser.uploadedVideos.length <= 0 ) {%>
+                        <% if(loggedUser.uploadedVideos.length <=0 ) {%>
                             <h1 class="mt-[15%] text-center text-lg text-zinc-400 font-medium">No videos uploaded</h1>
                             <%}else{%>
                                 <% loggedUser.uploadedVideos.forEach(function(video,i){%>
@@ -123,32 +129,34 @@
                                         <h1>
                                             <%=i+1%>
                                         </h1>
-                                        <div class="video-desc flex gap-3">
-                                            <div class="video-wrapper h-[12vh] w-[10vw] rounded-2xl relative">
-                                                <% if(video.thumbnail){ %>
-                                                    <img src="/uploads/images/<%=video.thumbnail%>"
-                                                        class="z-10  pointer-events-none h-full w-full object-cover rounded-2xl absolute left-0"
-                                                        alt="">
-                                                    <%}%>
-                                                        <video src="/uploads/videos/<%=video.filename%>" muted loop
-                                                            class="h-full w-full object-cover rounded-2xl">
-                                                        </video>
-                                            </div>
-                                            <div class="description w-[15vw]">
-                                                <h1 class="font-medium text-wrap break-words ">
-                                                    <%=video.title ?? 'Draft' %>
-                                                </h1>
-                                                <p class="text-sm text-zinc-400 text-wrap break-words">
-                                                    <%=video.description%>
-                                                </p>
-                                                <%if(! video.visibility){%>
-                                                    <p class="text-sm">private</p>
+                                        <a href="/openVideo/<%=video.title%>">
+                                            <div class="video-desc flex gap-3">
+                                                <div class="video-wrapper h-[12vh] w-[10vw] rounded-2xl relative">
+                                                    <% if(video.thumbnail){ %>
+                                                        <img src="/uploads/images/<%=video.thumbnail%>"
+                                                            class="z-10  pointer-events-none h-full w-full object-cover rounded-2xl absolute left-0"
+                                                            alt="">
+                                                        <%}%>
+                                                            <video preload="metadata" controlsList="false" src="/uploads/videos/<%=video.filename%>" muted loop
+                                                                class="h-full w-full object-cover rounded-2xl">
+                                                            </video>
+                                                </div>
+                                                <div class="description w-[15vw]">
+                                                    <h1 class="font-medium text-wrap break-words ">
+                                                        <%=video.title ?? 'Draft' %>
+                                                    </h1>
+                                                    <p class="text-sm text-zinc-400 text-wrap break-words">
+                                                        <%=video.description%>
+                                                    </p>
+                                                    <%if(! video.visibility){%>
+                                                        <p class="text-sm">private</p>
 
-                                                    <%}%>
+                                                        <%}%>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </a>
                                         <h1>
-                                             <%=video.uploadDate.toLocaleDateString('en-US', { date:'long' }) %>
+                                            <%=video.uploadDate.toLocaleDateString('en-US', { date:'long' }) %>
                                         </h1>
                                         <h1>
                                             <%=video.likes.length%> likes
@@ -227,7 +235,7 @@
                 `
         }
 
-        function innerhtml(title, filename, id, description, thumbnail,tags) {
+        function innerhtml(title, filename, id, description, thumbnail, tags) {
             document.querySelector('form .form-content').innerHTML = `
                       <i class="ri-arrow-left-line text-2xl font-semibold  absolute top-5 left-5" onclick="goBack()"></i>
                       <div class="inner-form-content flex gap-4 justify-center items-center h-full w-full">
@@ -308,7 +316,7 @@
                 .then(function (response) {
                     document.querySelector('form').action = `/updateVideo/${response._id}`
                     openOverlay();
-                    innerhtml(response.title, response.filename, response._id, response.description, response.thumbnail,response.tags);
+                    innerhtml(response.title, response.filename, response._id, response.description, response.thumbnail, response.tags);
                     document.querySelector('input').focus();
                 })
         }

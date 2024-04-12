@@ -1,0 +1,323 @@
+<%include ./partials/header%>
+  <link rel="stylesheet" href="/style.css">
+  <div class="leftside w-2/3 h-full overflow-y-auto scrollbar pl-16 pr-12">
+    <div class="playingvideo relative video-container paused w-full  mt-4 overflow-hidden rounded-2xl">
+
+      <div class="video-container absolute bottom-1 paused w-full" data-volume-level="high">
+        <img class="thumbnail-img">
+        <div class="video-controls-container">
+          <div class="timeline-container">
+            <div class="timeline">
+              <div class="thumb-indicator"></div>
+            </div>
+          </div>
+          <div class="controls">
+            <button class="play-pause-btn">
+              <svg class="play-icon" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+              </svg>
+              <svg class="pause-icon" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M14,19H18V5H14M6,19H10V5H6V19Z" />
+              </svg>
+            </button>
+            <div class="volume-container">
+              <button class="mute-btn">
+                <svg class="volume-high-icon" viewBox="0 0 24 24">
+                  <path fill="currentColor"
+                    d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+                </svg>
+                <svg class="volume-low-icon" viewBox="0 0 24 24">
+                  <path fill="currentColor"
+                    d="M5,9V15H9L14,20V4L9,9M18.5,12C18.5,10.23 17.5,8.71 16,7.97V16C17.5,15.29 18.5,13.76 18.5,12Z" />
+                </svg>
+                <svg class="volume-muted-icon" viewBox="0 0 24 24">
+                  <path fill="currentColor"
+                    d="M12,4L9.91,6.09L12,8.18M4.27,3L3,4.27L7.73,9H3V15H7L12,20V13.27L16.25,17.53C15.58,18.04 14.83,18.46 14,18.7V20.77C15.38,20.45 16.63,19.82 17.68,18.96L19.73,21L21,19.73L12,10.73M19,12C19,12.94 18.8,13.82 18.46,14.64L19.97,16.15C20.62,14.91 21,13.5 21,12C21,7.72 18,4.14 14,3.23V5.29C16.89,6.15 19,8.83 19,12M16.5,12C16.5,10.23 15.5,8.71 14,7.97V10.18L16.45,12.63C16.5,12.43 16.5,12.21 16.5,12Z" />
+                </svg>
+              </button>
+              <input class="volume-slider" type="range" min="0" max="1" step="any" value="1">
+            </div>
+            <div class="duration-container">
+              <div class="current-time">0:00</div>
+              /
+              <div class="total-time"></div>
+            </div>
+
+            <button class="speed-btn wide-btn">
+              1x
+            </button>
+            <button class="mini-player-btn">
+              <svg viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zm-10-7h9v6h-9z" />
+              </svg>
+            </button>
+
+            <button class="full-screen-btn">
+              <svg class="open" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+              </svg>
+              <svg class="close" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <div class="">
+        <i class="ri-play-fill text-white "></i>
+      </div>
+      <video class="w-full object-contain" src="<%=videoUrl%>"></video>
+
+    </div>
+    <div class="videodescription overflow-y-auto w-full flex flex-col gap-4  py-4">
+      <h1>
+        <%=video.title%>
+      </h1>
+      <div class="videodets flex justify-between ">
+        <div class="profile flex items-center gap-3">
+          <img class="w-[2.5vw] aspect-square bg-red-900 rounded-full" src="" alt="">
+          <div class="channel">
+            <h1>
+              <%=video.user.username%>
+            </h1>
+            <h1>
+              <%=video.user.subscribers.length%> subscribers
+            </h1>
+          </div>
+          <button onclick="subscribe(this,`<%=video.user._id%>`)"
+            class="py-1.5 ml-5 px-4 bg-zinc-200 rounded-3xl font-medium">
+            <i class="ri-notification-3-line"></i>
+            <h3 class="inline-block">
+              <%=loggedUser.subscribed.includes(video.user._id) ? 'Subscribed' : 'Subscribe' %>
+            </h3>
+          </button>
+          <!-- <%if(video.user.username !== loggedUser.username){%> -->
+          <!-- <%}%> -->
+        </div>
+        <div class="options flex items-center gap-5">
+          <h1 class="text-lg flex  rounded-3xl overflow-hidden"><span onclick="likedvideo('<%=video._id%>',this)"
+              class="like h-full px-2 hover:bg-zinc-200 py-1.5 pl-4 pr-2"><i
+                class="ri-thumb-up-<%= video.likes.includes(loggedUser._id) ? 'fill' : 'line' %>"></i>
+              <h3 class="inline-block">
+                <%=video.likes.length %>
+              </h3>
+            </span> <span onclick="dislikedvideo('<%=video._id%>',this)"
+              class="dislike py-1.5 pl-2 pr-4 hover:bg-zinc-200  "><i
+                class="ri-thumb-down-<%= video.dislikes.includes(loggedUser._id) ? 'fill' : 'line' %>"></i></span></h1>
+          <h1 onclick="watchlater(this,'<%=video._id%>')" class="text-xl"><i
+              class="ri-timer-2-<%=loggedUser.watchedlaterVideos.includes(video._id) ? 'fill' : 'line'%>"></i></h1>
+        </div>
+      </div>
+      <div class="description">
+        <h1></h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur accusamus repellat doloremque
+          rerum esse omnis quidem. Aperiam rem nisi assumenda maiores. Provident ut cupiditate asperiores
+          praesentium velit libero et sint!</p>
+      </div>
+      <div class="comment-section mt-10 w-full">
+        <div class="commentInp flex gap-2 items-center">
+          <div class="img w-10 aspect-square bg-gray-500 rounded-full overflow-hidden">
+            <img src="/uploads/images/<%=loggedUser.profileImg%>" class="h-full w-full object-cover" alt="">
+          </div>
+          <input type="text" class="comment-inp py-1 border-b outline-none w-full " placeholder="add a comment....">
+        </div>
+        <button type="submit"
+          class="comment-submit px-4 py-1 rounded-2xl bg-blue-500 text-white my-3 ml-[89%]">comment</button>
+        <h1><span>1,173</span> Comments</h1>
+        <div class="comments w-full">
+          <% video.comments.forEach(function(comment){ %>
+            <div class="comment flex gap-1 mt-5 w-full">
+              <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
+              <div class="right w-full">
+                <div class="flex ml-2 gap-1 items-center">
+                  <h3 class="font-medium text-md text-zinc-700">@connectrys446</h3>
+                </div>
+                <p class="ml-2 text-sm">Lorem ipsum dolor sit, amet consectetur adipisicing.</p>
+                <div class="flex items-center mt-1 gap-2" onclick="reply(this,'sajd')">
+  
+                  <hr class="w-10 mt-1 h-1">
+                  <span>Reply</span>
+                </div>
+                <%= comment.replies.length > 0 ? "comment.replies.length" : ""; %>
+                <div class="replies w-full">
+                  <div class="comment flex gap-1 mt-5 w-full">
+                    <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
+                    <div class="right w-full">
+                      <div class="flex ml-2 gap-1 items-center">
+                        <h3 class="font-medium text-md text-zinc-700">@connectrys446</h3>
+                      </div>
+                      <p class="ml-2 text-sm">Lorem ipsum dolor sit, amet consectetur adipisicing.</p>
+                      <div class="flex items-center mt-1 gap-2" onclick="reply(this,'sajd')">
+  
+                        <hr class="w-10 mt-1 h-1">
+                        <span>Reply</span>
+                      </div>
+                      <div class="replies w-full">
+                        <div class="comment flex gap-1 mt-5 w-full">
+                          <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
+                          <div class="right w-full">
+                            <div class="flex ml-2 gap-1 items-center">
+                              <h3 class="font-medium text-md text-zinc-700">@connectrys446</h3>
+                            </div>
+                            <p class="ml-2 text-sm">Lorem ipsum dolor sit, amet consectetur adipisicing.</p>
+                         
+                          </div>
+                        </div>
+  
+  
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <%})%>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="rightside h-full over w-1/3  p-3">
+    <div class="video w-full mb-1 flex gap-3 h-[15vh]">
+      <div class="cursor-pointer shrink-0 w-1/3 rounded-xl aspect-video bg-zinc-200 mb-2 relative overflow-hidden">
+        <div class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl hover:hidden">
+          <!-- <img src="https://jw-webmagazine.com/wp-content/uploads/2020/08/Anime-Demon-Slayer-Kimetsu-no-Yaiba.png" class="w-full h-full object-cover" alt=""> -->
+        </div>
+      </div>
+      <div class="dets relative flex-1 pr-4">
+        <i class=" ri-more-2-fill absolute top-5 -translate-y-1/2 right-2 "></i>
+        <h2 class="leading-tight">Attitude | Stand-up Comedy by Ravi Gupta Lorem ipsum dolor sit amet
+          consectetur adipisicing elit.</h2>
+        <div class="flex gap-1 items-center text-zinc-500">
+          <h4 class="text-zinc-500 text-sm">channel name</h4>
+          <h4 class="text-sm">15 views</h4>
+          <i class="ri-circle-fill text-[4px]"></i>
+          <h4 class="text-sm">23 hours ago</h4>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script src="/player.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
+    integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+
+
+    function likedvideo(videoId, elem) {
+      fetch(`/like/${videoId}`)
+        .then((res) => res.json())
+        .then(function (res) {
+          elem.querySelector('h3').textContent = res.likes.length
+          elem.parentNode.querySelector('.dislike i').classList.remove('ri-thumb-down-fill')
+          elem.parentNode.querySelector('.dislike i').classList.add('ri-thumb-down-line')
+        });
+      elem.querySelector('i').classList.toggle('ri-thumb-up-fill')
+      elem.querySelector('i').classList.toggle('ri-thumb-up-line')
+    }
+    function dislikedvideo(videoId, elem) {
+      elem.querySelector('i').classList.toggle('ri-thumb-down-fill')
+      elem.querySelector('i').classList.toggle('ri-thumb-down-line')
+      fetch(`/dislike/${videoId}`)
+        .then((res) => res.json())
+        .then(function (res) {
+          elem.parentNode.querySelector('.like h3').textContent = res.likes.length
+          elem.parentNode.querySelector('.like i').classList.remove('ri-thumb-up-fill')
+          elem.parentNode.querySelector('.like i').classList.add('ri-thumb-up-line')
+        });
+    }
+
+    function subscribe(elem, userid) {
+      fetch(`/subscribe/${userid}`)
+        .then((res) => res.json())
+        .then(function (res) {
+          elem.parentNode.querySelector('.profile button h3').textContent = (res) ? 'Subscribed' : 'Subscribe'
+        })
+    }
+    function watchlater(elem, videoid) {
+      fetch(`/watchlater/${videoid}`)
+      elem.querySelector('i').classList.toggle('ri-timer-2-line')
+      elem.querySelector('i').classList.toggle('ri-timer-2-fill')
+    }
+
+    function playpause() {
+      let flag = 1;
+      document.querySelector('.playingvideo').addEventListener('click', function (dets) {
+        if (!this.querySelector('.playbutton')) {
+          const playbutton = document.createElement('div')
+          playbutton.className = `playbutton absolute rounded-full aspect-square w-10 flex items-center  justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[rgba(0,0,0,0.5)] z-[999]`
+          this.appendChild(playbutton);
+          setTimeout(() => {
+            this.removeChild(playbutton);
+          }, 1000)
+        }
+        if (flag === 1) {
+          this.querySelector('.playbutton').innerHTML = `<i class="ri-play-fill text-white"></i>`
+          flag = 0;
+        } else {
+          this.querySelector('.playbutton').innerHTML = `<i class="ri-pause-fill text-white"></i>`
+          flag = 1;
+        }
+      }
+      )
+    }
+
+    playpause();
+
+
+    document.querySelector('.comment-submit').addEventListener('click', function () {
+      if (document.querySelector('.comment-inp').value != '') {
+        axios.post('/comment', {
+          data: {
+            comment: document.querySelector('.comment-inp').value,
+            video: '<%=video._id %>',
+            user: '<%=loggedUser._id%>'
+          }
+        }).then(function (response) {
+          document.querySelector('.comment-inp').value = ''
+          document.querySelector('.comments').innerHTML += `
+      <div class="comment flex gap-1 mt-5">
+            <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
+            <div class="right">
+              <div class="flex ml-2 gap-1 items-center">
+                <h3 class="font-medium text-md text-zinc-700"><%=loggedUser.channelName%></h3>
+              </div>
+              <p class="ml-2 text-sm">${response.data.comment}</p>
+              <div class="flex items-center mt-1 gap-2" onclick="reply('${response.data._id}')">
+                <hr class="w-10 mt-1 h-1">
+               <span>Reply</span>
+              </div>  
+            </div>
+          </div>
+      `
+
+        })
+      }
+    })
+
+    function reply(elem, cmntid) {
+      if(! elem.parentNode.querySelector('.replyInp')){
+      const replydiv = document.createElement('div')
+      replydiv.className = `replyInp mt-2 ml-4  w-full`
+      replydiv.innerHTML = `
+      <div class="inp w-full flex gap-2 items-center">
+                                <div class="img shrink-0 w-8 aspect-square bg-gray-500 rounded-full overflow-hidden">
+                                  <img src="/uploads/images/<%=loggedUser.profileImg%>" class="h-full w-full object-cover" alt="">
+                                </div>
+                                <input type="text" class="shrink-0 py-1 comment-inp border-b outline-none w-full text-sm" placeholder="reply a comment....">
+                              </div>
+                              <button class="px-4 py-1.5 bg-gray-500 text-white rounded-full text-sm mt-3 font-medium ml-10">cancel</button>
+                              <button class="px-4 py-1.5 bg-blue-500 text-white rounded-full text-sm mt-3 font-medium ml-1">reply</button>
+                            `
+      console.log(elem.parentNode, elem.parentNode.parentNode.querySelector('.replies'))
+      elem.parentNode.insertBefore(replydiv, elem.parentNode.querySelector('.replies'))
+    }}
+
+
+  </script>
+  <%include ./partials/footer%>
