@@ -15,7 +15,7 @@ const commentSchema = mongoose.Schema({
         ref: 'comment'
     }],
     level:{
-        type:Number,
+        type:String,
         default:0
     }
 

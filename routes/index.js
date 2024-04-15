@@ -294,17 +294,26 @@ router.post('/reply', isloggedIn, async function (req, res, next) {
       user: req.body.data.user,
       comment: req.body.data.comment,
     });
-
-    if(comment.level === 0)newcomment.level =1;
-    else if(comment.level === 1)newcomment.level = comment._id;
+    if(comment.level == 0)newcomment.level =1;
+    else if(comment.level == 1)newcomment.level = comment._id;
     else{
       comment = await commentModel.findOne({_id:comment.level});
+      newcomment.level = comment._id;
     }
+    await newcomment.save()
     comment.replies.push(newcomment._id);
     await comment.save();
     res.json(newcomment);
 
 })
+
+// -----------------------------show replies ----------------------
+
+router.get('/showReplies',isloggedIn, async function (req, res, next) {
+  const comment = await commentModel.findOne({ _id: req.query.commentId }).populate('replies');
+  res.json(comment.replies);
+})
+
 
 // ------------------------subscribe ----------------------
 

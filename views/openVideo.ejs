@@ -143,15 +143,16 @@
                 <p class="ml-2 text-sm">
                   <%=comment.comment%>
                 </p>
-                <div class="flex items-center mt-1 gap-2" onclick="reply(this,'<%=comment._id%>')">
+                <div class="flex items-center mt-1 gap-2 cursor-pointer" onclick="reply(this,'<%=comment._id%>')">
 
                   <hr class="w-10 mt-1 h-1">
                   <span>Reply</span>
                 </div>
-                <%= comment.replies.length > 0 ? comment.replies.length : ""; %>
-                  <div class="replies w-full">
-
-                  </div>
+                <div class="replies w-full"></div>
+                <%if (comment.replies.length> 0){%>
+                  <button class="text-sm text-blue-500 font-medium my-1.5 ml-2 hover:bg-blue-100 rounded-full px-2 py-1"
+                    onclick="showReplies(this,'<%=comment._id%>')">View replies</button>
+                  <%}%>
               </div>
             </div>
             <%})%>
@@ -187,8 +188,8 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
 
-const commentui = (response,show)=>{
-  return ` 
+    const commentui = (response, show) => {
+      return ` 
           <div class="comment flex gap-1 mt-5 w-full">
               <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full overflow-hidden">
                 <img src="/uploads/images/<%=loggedUser.profileImg%>" class="h-full w-full object-cover" alt="">
@@ -198,9 +199,8 @@ const commentui = (response,show)=>{
                   <h3 class="font-medium text-md text-zinc-700"><%=loggedUser.channelName%></h3>
                 </div>
                 <p class="ml-2 text-sm">${response.data.comment}</p>
-       ${ response.data.level <=2 ? `<div class="flex items-center mt-1 gap-2" onclick="reply(this,'${response.data._id}')"><hr class="w-10 mt-1 h-1"><span>Reply</span></div>`:''}                        
+                <div class="flex items-center mt-1 gap-2" onclick="reply(this,'${response.data._id}')"><hr class="w-10 mt-1 h-1"><span>Reply</span></div>                       
                 <div class="replies w-full">
-                
                 </div>
               </div>
             </div>
@@ -270,7 +270,7 @@ const commentui = (response,show)=>{
 
     playpause();
 
-   
+
 
     document.querySelector('.comment-submit').addEventListener('click', function () {
       if (document.querySelector('.comment-inp').value != '') {
@@ -282,7 +282,7 @@ const commentui = (response,show)=>{
           }
         }).then(function (response) {
           document.querySelector('.comment-inp').value = '';
-          document.querySelector('.comments').innerHTML += commentui(response,true)
+          document.querySelector('.comments').innerHTML += commentui(response, true)
 
         })
       }
@@ -312,12 +312,12 @@ const commentui = (response,show)=>{
       if (btn.parentNode.parentNode.querySelector('input').value != '') {
         axios.post('/reply', {
           data: {
-            id:cmntid,
+            id: cmntid,
             comment: btn.parentNode.parentNode.querySelector('input').value,
             user: '<%=loggedUser._id%>'
           }
-        }).then(function (response) { 
-          btn.parentNode.parentNode.querySelector('.replies').innerHTML+= commentui(response,true)
+        }).then(function (response) {
+          btn.parentNode.parentNode.querySelector('.replies').innerHTML += commentui(response, true)
           removeInput(btn);
         })
       }
@@ -328,5 +328,37 @@ const commentui = (response,show)=>{
       btn.parentNode.parentNode.removeChild(btn.parentNode);
     }
 
+    function showReplies(btn, cmntid) {
+        axios.get('/showreplies', {
+          params: {
+            commentId: cmntid
+          }
+        }).then((response) => {
+          btn.parentNode.querySelector('.replies').innerHTML = ''
+            response.data.forEach(response => {
+            btn.parentNode.querySelector('.replies').innerHTML += ` 
+          <div class="comment flex gap-1 mt-5 w-full">
+              <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full overflow-hidden">
+                <img src="/uploads/images/<%=loggedUser.profileImg%>" class="h-full w-full object-cover" alt="">
+              </div>
+              <div class="right w-[calc(100%-10rem)]">
+                <div class="flex ml-2 gap-1 items-center">
+                  <h3 class="font-medium text-md text-zinc-700"><%=loggedUser.channelName%></h3>
+                </div>
+                <p class="ml-2 text-sm">${response.comment}</p>
+                <div class="flex items-center mt-1 gap-2" onclick="reply(this,'${response._id}')"><hr class="w-10 mt-1 h-1"><span>Reply</span></div>                   
+                <div class="replies w-full">
+                
+                </div>
+                ${response.replies.length > 0 ? `<button class="text-sm text-blue-500 font-medium my-1.5 ml-2 hover:bg-blue-100 rounded-full px-2 py-1" onclick="showReplies(this,'${response._id}')">View replies</button>` : ''}
+              </div>
+            </div>
+      
+    `
+          });
+        
+        })
+
+    }
   </script>
   <%include ./partials/footer%>
