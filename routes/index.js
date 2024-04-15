@@ -31,8 +31,8 @@ passport.use(new GoogleStrategy({
 
 const HOSTNAME = process.env.HOSTNAME;
 const STORAGE_ZONE_NAME = process.env.STORAGE_ZONE_NAME;
-const ACCESS_KEY =process.env.ACCESS_KEY;
-const STREAM_KEY =process.env.STREAM_KEY;
+const ACCESS_KEY = process.env.ACCESS_KEY;
+const STREAM_KEY = process.env.STREAM_KEY;
 
 const uploadFileToBunnyCDN = (filePath, fileName) => {
   return new Promise(async (resolve, reject) => {
@@ -66,7 +66,7 @@ router.get('/', async function (req, res, next) {
   }
 
   const videos = await videoModel.find().populate('user')
-  res.render('index.ejs', { loggedUser,videos, left:true });
+  res.render('index.ejs', { loggedUser, videos, left: true });
 });
 
 
@@ -78,8 +78,8 @@ router.get('/channel/:username', async function (req, res, next) {
   } else {
     loggedUser = req.user;
   }
-  const channelUser= await userModel.findOne({ username: req.params.username0})
-  res.render('profile.ejs', { loggedUser,channelUser,left:true });
+  const channelUser = await userModel.findOne({ username: req.params.username0 })
+  res.render('profile.ejs', { loggedUser, channelUser, left: true });
 });
 
 // --------------playlist-----------
@@ -90,7 +90,7 @@ router.get('/playlist', async function (req, res, next) {
   } else {
     loggedUser = req.user;
   }
-  res.render('playlist.ejs', { loggedUser, left:true });
+  res.render('playlist.ejs', { loggedUser, left: true });
 });
 
 // ----------------profile---------------
@@ -101,7 +101,7 @@ router.get('/studio', async function (req, res, next) {
   } else {
     loggedUser = req.user;
   }
-  res.render('studio.ejs', { loggedUser});
+  res.render('studio.ejs', { loggedUser });
 });
 
 // -----------------------history page-----------
@@ -112,7 +112,7 @@ router.get('/history', async function (req, res, next) {
   } else {
     loggedUser = req.user;
   }
-  res.render('history.ejs', { loggedUser, left:true });
+  res.render('history.ejs', { loggedUser, left: true });
 });
 
 // -----------------------search results--------------
@@ -123,7 +123,7 @@ router.get('/results', async function (req, res, next) {
   } else {
     loggedUser = req.user;
   }
-  res.render('results.ejs', { loggedUser, left:true });
+  res.render('results.ejs', { loggedUser, left: true });
 });
 
 // --------------------shorts----------------------
@@ -134,7 +134,7 @@ router.get('/shorts', async function (req, res, next) {
   } else {
     loggedUser = req.user;
   }
-  res.render('shorts.ejs', { loggedUser, left:true });
+  res.render('shorts.ejs', { loggedUser, left: true });
 });
 
 // -----------------------about you----------------
@@ -145,47 +145,47 @@ router.get('/you', async function (req, res, next) {
   } else {
     loggedUser = req.user;
   }
-  res.render('you.ejs', { loggedUser, left:true });
+  res.render('you.ejs', { loggedUser, left: true });
 });
 
 // ----------------------------streaming video ------------------------
 
-router.get('/openVideo/:title',isloggedIn, async function(req, res,next){
+router.get('/openVideo/:title', isloggedIn, async function (req, res, next) {
   let loggedUser;
   if (req.user) {
     loggedUser = await userModel.findOne({ username: req.user.username })
   } else {
     loggedUser = req.user;
   }
-  const video = await videoModel.findOne({title:req.params.title}).populate('user').populate({path:'comments',populate:{path:'replies'}});
+  const video = await videoModel.findOne({ title: req.params.title }).populate('user').populate({ path: 'comments', populate: { path: 'replies user' } });
 
   const videoUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${video.filename}?accesskey=${STREAM_KEY}`;
 
-  res.render('openVideo', {video,videoUrl,loggedUser,left:false})
+  res.render('openVideo', { video, videoUrl, loggedUser, left: false })
 })
 
 // ------------deleting Video -------------------
 
-router.get('/deleteVideo/:id',async function (req, res) {
-  const video = await videoModel.findOneAndDelete({_id: req.params.id});
-  const user = await userModel.findOne({username:req.user.username});
-  user.uploadedVideos.splice(user.uploadedVideos.indexOf(req.params.id),1);
+router.get('/deleteVideo/:id', async function (req, res) {
+  const video = await videoModel.findOneAndDelete({ _id: req.params.id });
+  const user = await userModel.findOne({ username: req.user.username });
+  user.uploadedVideos.splice(user.uploadedVideos.indexOf(req.params.id), 1);
   await user.save()
   res.redirect('/studio');
 })
 
 // ------------------------updateVideo------------------------
 
-router.post('/updateVideo/:id',async function (req, res) {
+router.post('/updateVideo/:id', async function (req, res) {
   let tags = req.body.tags.split(',');
-  const video = await videoModel.findOneAndUpdate({_id: req.params.id},{
-    title:req.body.title,
-    description:req.body.description,
+  const video = await videoModel.findOneAndUpdate({ _id: req.params.id }, {
+    title: req.body.title,
+    description: req.body.description,
     tags: tags,
-    thumbnail:req.body.thumbnail,
-    visibility:req.body.visibility,
+    thumbnail: req.body.thumbnail,
+    visibility: req.body.visibility,
   },
-  {new:true});
+    { new: true });
   console.log(video);
   console.log(tags);
   res.redirect('/studio');
@@ -193,34 +193,34 @@ router.post('/updateVideo/:id',async function (req, res) {
 
 // ------------------------find video-------------
 
-router.get('/findVideo/:id',async function (req, res) {
-  const video = await videoModel.findOne({_id: req.params.id});
+router.get('/findVideo/:id', async function (req, res) {
+  const video = await videoModel.findOne({ _id: req.params.id });
   res.json(video);
 })
 
 // -------------uploading routes --------------------
 
-router.post('/videoUpload',videoUpload.single('video'),async function (req, res) {
+router.post('/videoUpload', videoUpload.single('video'), async function (req, res) {
   const video = await videoModel.create({
-    user:req.user.id,
-    filename:req.file.filename
+    user: req.user.id,
+    filename: req.file.filename
   });
-  const user = await userModel.findOneAndUpdate({_id:req.user.id},{ $push: { uploadedVideos: video._id } },{new:true})
+  const user = await userModel.findOneAndUpdate({ _id: req.user.id }, { $push: { uploadedVideos: video._id } }, { new: true })
 
-  const response = await uploadFileToBunnyCDN(`./public/uploads/videos/${req.file.filename}`,req.file.filename);
+  const response = await uploadFileToBunnyCDN(`./public/uploads/videos/${req.file.filename}`, req.file.filename);
   res.json(video);
 })
-router.post('/thumbnailupload/:id',imageUpload.single('thumbnail'),async function (req, res) {
-const video = await videoModel.findOneAndUpdate({_id: req.params.id},{thumbnail:req.file.filename},{new:true});
-res.json(req.file);
+router.post('/thumbnailupload/:id', imageUpload.single('thumbnail'), async function (req, res) {
+  const video = await videoModel.findOneAndUpdate({ _id: req.params.id }, { thumbnail: req.file.filename }, { new: true });
+  res.json(req.file);
 })
 
 
-router.post('/postVideo/:type/:id',async function (req, res) {
-  const video = await videoModel.findOneAndUpdate({_id: req.params.id},req.body);
+router.post('/postVideo/:type/:id', async function (req, res) {
+  const video = await videoModel.findOneAndUpdate({ _id: req.params.id }, req.body);
   let tags = req.body.tags.split(',');
   video.type = req.params.type;
-  video.tags= tags;
+  video.tags = tags;
   await video.save();
   res.redirect('/studio');
 })
@@ -228,34 +228,34 @@ router.post('/postVideo/:type/:id',async function (req, res) {
 
 // ------------like dislike video----------
 
-router.get('/like/:videoid',async function(req,res,next){
-  const loggedUser = await userModel.findOne({username:req.session.passport.user.username});
-  const video = await videoModel.findOne({_id:req.params.videoid});
-  if(video.likes.indexOf(loggedUser._id) === -1){
-    if(video.dislikes.indexOf(loggedUser._id) !== -1){
-      video.dislikes.splice(video.dislikes.indexOf(loggedUser._id),1);
+router.get('/like/:videoid', async function (req, res, next) {
+  const loggedUser = await userModel.findOne({ username: req.session.passport.user.username });
+  const video = await videoModel.findOne({ _id: req.params.videoid });
+  if (video.likes.indexOf(loggedUser._id) === -1) {
+    if (video.dislikes.indexOf(loggedUser._id) !== -1) {
+      video.dislikes.splice(video.dislikes.indexOf(loggedUser._id), 1);
     }
     video.likes.push(loggedUser._id);
     loggedUser.likedVideos.push(video._id);
-  }else{
-    video.likes.splice(video.likes.indexOf(loggedUser._id),1);
-    loggedUser.likedVideos.splice(loggedUser.likedVideos.indexOf(video._id),1);
+  } else {
+    video.likes.splice(video.likes.indexOf(loggedUser._id), 1);
+    loggedUser.likedVideos.splice(loggedUser.likedVideos.indexOf(video._id), 1);
   }
   await loggedUser.save();
   await video.save();
   res.status(200).json(video)
 })
 
-router.get('/dislike/:videoid',async function(req,res,next){
-  const loggedUser = await userModel.findOne({username:req.session.passport.user.username});
-  const video = await videoModel.findOne({_id:req.params.videoid});
-  if(video.dislikes.indexOf(loggedUser._id) === -1){
-    if(video.likes.indexOf(loggedUser._id) !== -1){
-      video.likes.splice(video.likes.indexOf(loggedUser._id),1);
+router.get('/dislike/:videoid', async function (req, res, next) {
+  const loggedUser = await userModel.findOne({ username: req.session.passport.user.username });
+  const video = await videoModel.findOne({ _id: req.params.videoid });
+  if (video.dislikes.indexOf(loggedUser._id) === -1) {
+    if (video.likes.indexOf(loggedUser._id) !== -1) {
+      video.likes.splice(video.likes.indexOf(loggedUser._id), 1);
     }
     video.dislikes.push(loggedUser._id);
-  }else{
-    video.dislikes.splice(video.dislikes.indexOf(loggedUser._id),1);
+  } else {
+    video.dislikes.splice(video.dislikes.indexOf(loggedUser._id), 1);
   }
   await video.save();
   res.status(200).json(video)
@@ -263,13 +263,13 @@ router.get('/dislike/:videoid',async function(req,res,next){
 
 // ------------------watch later -----------------------
 
-router.get('/watchlater/:videoid',async function(req,res,next){
-  const loggedUser = await userModel.findOne({username:req.session.passport.user.username});
-  const video = await videoModel.findOne({_id:req.params.videoid});
-  if(loggedUser.watchedlaterVideos.indexOf(video._id) === -1){
+router.get('/watchlater/:videoid', async function (req, res, next) {
+  const loggedUser = await userModel.findOne({ username: req.session.passport.user.username });
+  const video = await videoModel.findOne({ _id: req.params.videoid });
+  if (loggedUser.watchedlaterVideos.indexOf(video._id) === -1) {
     loggedUser.watchedlaterVideos.push(video._id);
-  }else{
-    loggedUser.watchedlaterVideos.splice(loggedUser.watchedlaterVideos.indexOf(video._id),1);
+  } else {
+    loggedUser.watchedlaterVideos.splice(loggedUser.watchedlaterVideos.indexOf(video._id), 1);
   }
   await loggedUser.save();
 })
@@ -277,27 +277,49 @@ router.get('/watchlater/:videoid',async function(req,res,next){
 // ---------------------------comment------------------------
 
 
-router.post('/comment',isloggedIn,async function(req,res,next){
-  const video = await videoModel.findOne({_id:req.body.data.video});
+router.post('/comment', isloggedIn, async function (req, res, next) {
+  const video = await videoModel.findOne({ _id: req.body.data.video });
   const comment = await commentModel.create(req.body.data);
   video.comments.push(comment._id);
   await video.save();
+  res.json(comment);
+})
+
+// -----------------------------reply--------------------------
+
+router.post('/reply', isloggedIn, async function (req, res, next) {
+    let comment = await commentModel.findOne({ _id: req.body.data.id });
+
+    const newcomment = await commentModel.create({
+      user: req.body.data.user,
+      comment: req.body.data.comment,
+    });
+
+    if(comment.level === 0)newcomment.level =1;
+    else if(comment.level === 1)newcomment.level = comment._id;
+    else{
+      comment = await commentModel.findOne({_id:comment.level});
+    }
+    comment.replies.push(newcomment._id);
+    await comment.save();
+    res.json(newcomment);
+
 })
 
 // ------------------------subscribe ----------------------
 
-router.get('/subscribe/:userid',async function(req,res,next){
-  const loggedUser = await userModel.findOne({username:req.session.passport.user.username});
-  const videoUser = await userModel.findOne({_id:req.params.userid})
-  console.log(videoUser) 
+router.get('/subscribe/:userid', async function (req, res, next) {
+  const loggedUser = await userModel.findOne({ username: req.session.passport.user.username });
+  const videoUser = await userModel.findOne({ _id: req.params.userid })
+  console.log(videoUser)
   let subs;
-  if(loggedUser.subscribed.indexOf(videoUser._id) === -1){
+  if (loggedUser.subscribed.indexOf(videoUser._id) === -1) {
     loggedUser.subscribed.push(videoUser._id);
     videoUser.subscribers.push(loggedUser._id);
-    subs =true;
-  }else{
-    loggedUser.subscribed.splice(loggedUser.subscribed.indexOf(videoUser._id),1);
-    videoUser.subscribers.splice(videoUser.subscribers.indexOf(loggedUser._id),1);
+    subs = true;
+  } else {
+    loggedUser.subscribed.splice(loggedUser.subscribed.indexOf(videoUser._id), 1);
+    videoUser.subscribers.splice(videoUser.subscribers.indexOf(loggedUser._id), 1);
     subs = false
   }
   await loggedUser.save();
@@ -324,8 +346,8 @@ router.get('/logout', function (req, res, next) {
 });
 
 
-function isloggedIn(req,res,next){
-  if(req.isAuthenticated()){
+function isloggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
     return next();
   }
   res.redirect('/');

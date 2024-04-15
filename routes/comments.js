@@ -13,7 +13,11 @@ const commentSchema = mongoose.Schema({
     replies: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'comment'
-    }]
+    }],
+    level:{
+        type:Number,
+        default:0
+    }
 
 
 

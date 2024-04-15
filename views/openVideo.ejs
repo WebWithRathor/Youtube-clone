@@ -118,7 +118,7 @@
           rerum esse omnis quidem. Aperiam rem nisi assumenda maiores. Provident ut cupiditate asperiores
           praesentium velit libero et sint!</p>
       </div>
-      <div class="comment-section mt-10 w-full">
+      <div class="comment-section mt-10 w-full ">
         <div class="commentInp flex gap-2 items-center">
           <div class="img w-10 aspect-square bg-gray-500 rounded-full overflow-hidden">
             <img src="/uploads/images/<%=loggedUser.profileImg%>" class="h-full w-full object-cover" alt="">
@@ -128,54 +128,33 @@
         <button type="submit"
           class="comment-submit px-4 py-1 rounded-2xl bg-blue-500 text-white my-3 ml-[89%]">comment</button>
         <h1><span>1,173</span> Comments</h1>
-        <div class="comments w-full">
+        <div class="comments w-full ">
           <% video.comments.forEach(function(comment){ %>
             <div class="comment flex gap-1 mt-5 w-full">
-              <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
+              <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full overflow-hidden">
+                <img src="/uploads/images/<%=comment.user.profileImg%>" class="h-full w-full object-cover" alt="">
+              </div>
               <div class="right w-full">
                 <div class="flex ml-2 gap-1 items-center">
-                  <h3 class="font-medium text-md text-zinc-700">@connectrys446</h3>
+                  <h3 class="font-medium text-md text-zinc-700">
+                    <%=comment.user.channelName%>
+                  </h3>
                 </div>
-                <p class="ml-2 text-sm">Lorem ipsum dolor sit, amet consectetur adipisicing.</p>
-                <div class="flex items-center mt-1 gap-2" onclick="reply(this,'sajd')">
-  
+                <p class="ml-2 text-sm">
+                  <%=comment.comment%>
+                </p>
+                <div class="flex items-center mt-1 gap-2" onclick="reply(this,'<%=comment._id%>')">
+
                   <hr class="w-10 mt-1 h-1">
                   <span>Reply</span>
                 </div>
-                <%= comment.replies.length > 0 ? "comment.replies.length" : ""; %>
-                <div class="replies w-full">
-                  <div class="comment flex gap-1 mt-5 w-full">
-                    <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
-                    <div class="right w-full">
-                      <div class="flex ml-2 gap-1 items-center">
-                        <h3 class="font-medium text-md text-zinc-700">@connectrys446</h3>
-                      </div>
-                      <p class="ml-2 text-sm">Lorem ipsum dolor sit, amet consectetur adipisicing.</p>
-                      <div class="flex items-center mt-1 gap-2" onclick="reply(this,'sajd')">
-  
-                        <hr class="w-10 mt-1 h-1">
-                        <span>Reply</span>
-                      </div>
-                      <div class="replies w-full">
-                        <div class="comment flex gap-1 mt-5 w-full">
-                          <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
-                          <div class="right w-full">
-                            <div class="flex ml-2 gap-1 items-center">
-                              <h3 class="font-medium text-md text-zinc-700">@connectrys446</h3>
-                            </div>
-                            <p class="ml-2 text-sm">Lorem ipsum dolor sit, amet consectetur adipisicing.</p>
-                         
-                          </div>
-                        </div>
-  
-  
-                      </div>
-                    </div>
+                <%= comment.replies.length > 0 ? comment.replies.length : ""; %>
+                  <div class="replies w-full">
+
                   </div>
-                </div>
               </div>
             </div>
-          <%})%>
+            <%})%>
         </div>
       </div>
     </div>
@@ -208,6 +187,26 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
 
+const commentui = (response,show)=>{
+  return ` 
+          <div class="comment flex gap-1 mt-5 w-full">
+              <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full overflow-hidden">
+                <img src="/uploads/images/<%=loggedUser.profileImg%>" class="h-full w-full object-cover" alt="">
+              </div>
+              <div class="right w-[calc(100%-10rem)]">
+                <div class="flex ml-2 gap-1 items-center">
+                  <h3 class="font-medium text-md text-zinc-700"><%=loggedUser.channelName%></h3>
+                </div>
+                <p class="ml-2 text-sm">${response.data.comment}</p>
+       ${ response.data.level <=2 ? `<div class="flex items-center mt-1 gap-2" onclick="reply(this,'${response.data._id}')"><hr class="w-10 mt-1 h-1"><span>Reply</span></div>`:''}                        
+                <div class="replies w-full">
+                
+                </div>
+              </div>
+            </div>
+      
+    `}
+
 
     function likedvideo(videoId, elem) {
       fetch(`/like/${videoId}`)
@@ -220,6 +219,7 @@
       elem.querySelector('i').classList.toggle('ri-thumb-up-fill')
       elem.querySelector('i').classList.toggle('ri-thumb-up-line')
     }
+
     function dislikedvideo(videoId, elem) {
       elem.querySelector('i').classList.toggle('ri-thumb-down-fill')
       elem.querySelector('i').classList.toggle('ri-thumb-down-line')
@@ -239,6 +239,7 @@
           elem.parentNode.querySelector('.profile button h3').textContent = (res) ? 'Subscribed' : 'Subscribe'
         })
     }
+
     function watchlater(elem, videoid) {
       fetch(`/watchlater/${videoid}`)
       elem.querySelector('i').classList.toggle('ri-timer-2-line')
@@ -269,6 +270,7 @@
 
     playpause();
 
+   
 
     document.querySelector('.comment-submit').addEventListener('click', function () {
       if (document.querySelector('.comment-inp').value != '') {
@@ -279,45 +281,52 @@
             user: '<%=loggedUser._id%>'
           }
         }).then(function (response) {
-          document.querySelector('.comment-inp').value = ''
-          document.querySelector('.comments').innerHTML += `
-      <div class="comment flex gap-1 mt-5">
-            <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
-            <div class="right">
-              <div class="flex ml-2 gap-1 items-center">
-                <h3 class="font-medium text-md text-zinc-700"><%=loggedUser.channelName%></h3>
-              </div>
-              <p class="ml-2 text-sm">${response.data.comment}</p>
-              <div class="flex items-center mt-1 gap-2" onclick="reply('${response.data._id}')">
-                <hr class="w-10 mt-1 h-1">
-               <span>Reply</span>
-              </div>  
-            </div>
-          </div>
-      `
+          document.querySelector('.comment-inp').value = '';
+          document.querySelector('.comments').innerHTML += commentui(response,true)
 
         })
       }
     })
 
     function reply(elem, cmntid) {
-      if(! elem.parentNode.querySelector('.replyInp')){
-      const replydiv = document.createElement('div')
-      replydiv.className = `replyInp mt-2 ml-4  w-full`
-      replydiv.innerHTML = `
-      <div class="inp w-full flex gap-2 items-center">
-                                <div class="img shrink-0 w-8 aspect-square bg-gray-500 rounded-full overflow-hidden">
-                                  <img src="/uploads/images/<%=loggedUser.profileImg%>" class="h-full w-full object-cover" alt="">
-                                </div>
-                                <input type="text" class="shrink-0 py-1 comment-inp border-b outline-none w-full text-sm" placeholder="reply a comment....">
-                              </div>
-                              <button class="px-4 py-1.5 bg-gray-500 text-white rounded-full text-sm mt-3 font-medium ml-10">cancel</button>
-                              <button class="px-4 py-1.5 bg-blue-500 text-white rounded-full text-sm mt-3 font-medium ml-1">reply</button>
+      if (!elem.parentNode.querySelector(`.replyInp${cmntid}`)) {
+        const replydiv = document.createElement('div')
+        replydiv.className = `replyInp${cmntid} mt-2 ml-4  w-full`
+        replydiv.innerHTML = `
+     <div class="inp w-full flex gap-2 items-center">
+      <div class="img shrink-0 w-8 aspect-square bg-gray-500 rounded-full overflow-hidden">
+        <img src="/uploads/images/<%=loggedUser.profileImg%>" class="h-full w-full object-cover" alt="">
+      </div>
+      <input  type="text" class="shrink-0 py-1 comment-inp border-b outline-none w-[90%] text-sm" placeholder="reply a comment....">
+      </div>
+      <button class="px-4 py-1.5 bg-gray-500 text-white rounded-full text-sm mt-3 font-medium ml-10" onclick="removeInput(this)">cancel</button>
+      <button class="px-4 py-1.5 bg-blue-500 text-white rounded-full text-sm mt-3 font-medium ml-1" onclick="replycomment(this,'${cmntid}')">reply</button>
                             `
-      console.log(elem.parentNode, elem.parentNode.parentNode.querySelector('.replies'))
-      elem.parentNode.insertBefore(replydiv, elem.parentNode.querySelector('.replies'))
-    }}
+        elem.parentNode.insertBefore(replydiv, elem.parentNode.querySelector('.replies'));
+        document.querySelector(`.replyInp${cmntid} input`).focus();
+      }
+    }
 
+    function replycomment(btn, cmntid) {
+
+      if (btn.parentNode.parentNode.querySelector('input').value != '') {
+        axios.post('/reply', {
+          data: {
+            id:cmntid,
+            comment: btn.parentNode.parentNode.querySelector('input').value,
+            user: '<%=loggedUser._id%>'
+          }
+        }).then(function (response) { 
+          btn.parentNode.parentNode.querySelector('.replies').innerHTML+= commentui(response,true)
+          removeInput(btn);
+        })
+      }
+
+    }
+
+    function removeInput(btn) {
+      btn.parentNode.parentNode.removeChild(btn.parentNode);
+    }
 
   </script>
   <%include ./partials/footer%>
