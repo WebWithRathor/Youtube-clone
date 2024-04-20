@@ -6,6 +6,7 @@ const passport = require('passport');
 const videoUpload = require('./videomulter.js')
 const imageUpload = require('./imagemulter.js')
 const userModel = require('./users.js');
+const playlistModel = require('./playlist.js');
 const videoModel = require('./video.js');
 const commentModel = require('./comments.js');
 const fs = require('fs');
@@ -78,8 +79,24 @@ router.get('/channel/:username', async function (req, res, next) {
   } else {
     loggedUser = req.user;
   }
-  const channelUser = await userModel.findOne({ username: req.params.username0 })
+  const channelUser = await userModel.findOne({ username: req.params.username })
   res.render('profile.ejs', { loggedUser, channelUser, left: true });
+});
+
+
+// ------------------------previewingVideos in channel page --------------------
+
+router.get('/previewVideos/:username/:type', async (req, res) => {
+  const type = req.params.type === 'Home' ? '2' : req.params.type === 'Videos' ? 'uploadedVideos' : 'playlist';
+  if (type === '2') {
+    const user = await userModel.findOne({ username: req.params.username }).populate(type);
+    const mergedArray = user.uploadedVideos.concat(user.playlist);
+    mergedArray.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
+  } else {
+    const user = await userModel.findOne({ username: req.params.username }).populate(type);
+    res.status(200).json(user[type]);
+  }
+  console.log();
 });
 
 // --------------playlist-----------
@@ -158,10 +175,17 @@ router.get('/openVideo/:title', isloggedIn, async function (req, res, next) {
     loggedUser = req.user;
   }
   const video = await videoModel.findOne({ title: req.params.title }).populate('user').populate({ path: 'comments', populate: { path: 'replies user' } });
+  if (video.views.indexOf(loggedUser._id) === -1) {
+    video.views.push(loggedUser._id);
+    await video.save();
+  }
+  const uploadDate = require('../utils/timeController.js').timeDiffer(video.uploadDate);
+  let showVideo = await videoModel.find({ _id: { $ne: video._id } }).populate('user');
+  showVideo = showVideo.map(video => ({ ...video.toObject(), uploadDate: require('../utils/timeController.js').timeDiffer(video.uploadDate) }));
 
   const videoUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${video.filename}?accesskey=${STREAM_KEY}`;
 
-  res.render('openVideo', { video, videoUrl, loggedUser, left: false })
+  res.render('openVideo', { video, videoUrl, uploadDate, showVideo, loggedUser, left: false })
 })
 
 // ------------deleting Video -------------------
@@ -288,28 +312,28 @@ router.post('/comment', isloggedIn, async function (req, res, next) {
 // -----------------------------reply--------------------------
 
 router.post('/reply', isloggedIn, async function (req, res, next) {
-    let comment = await commentModel.findOne({ _id: req.body.data.id });
+  let comment = await commentModel.findOne({ _id: req.body.data.id });
 
-    const newcomment = await commentModel.create({
-      user: req.body.data.user,
-      comment: req.body.data.comment,
-    });
-    if(comment.level == 0)newcomment.level =1;
-    else if(comment.level == 1)newcomment.level = comment._id;
-    else{
-      comment = await commentModel.findOne({_id:comment.level});
-      newcomment.level = comment._id;
-    }
-    await newcomment.save()
-    comment.replies.push(newcomment._id);
-    await comment.save();
-    res.json(newcomment);
+  const newcomment = await commentModel.create({
+    user: req.body.data.user,
+    comment: req.body.data.comment,
+  });
+  if (comment.level == 0) newcomment.level = 1;
+  else if (comment.level == 1) newcomment.level = comment._id;
+  else {
+    comment = await commentModel.findOne({ _id: comment.level });
+    newcomment.level = comment._id;
+  }
+  await newcomment.save()
+  comment.replies.push(newcomment._id);
+  await comment.save();
+  res.json(newcomment);
 
 })
 
 // -----------------------------show replies ----------------------
 
-router.get('/showReplies',isloggedIn, async function (req, res, next) {
+router.get('/showReplies', isloggedIn, async function (req, res, next) {
   const comment = await commentModel.findOne({ _id: req.query.commentId }).populate('replies');
   res.json(comment.replies);
 })

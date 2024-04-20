@@ -26,6 +26,10 @@ const userSchema = mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:'video'
   }],
+  watchedlaterplaylist:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'playlist'
+  }],
   uploadedVideos:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:'video'
@@ -37,6 +41,10 @@ const userSchema = mongoose.Schema({
   subscribers:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:'user'
+  }],
+  playlist:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'playlist'
   }]
 })
 

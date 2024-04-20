@@ -2,26 +2,33 @@
     <div class="right h-full flex-1 relative px-6">
         <div class="about px-20 py-5 flex items-center gap-6">
             <div class="profileImg h-[10.5vw] rounded-full overflow-hidden aspect-square">
-                <img class="h-full w-full object-cover" src="/uploads/images/<%=loggedUser.profileImg%>" alt="">
+                <img class="h-full w-full object-cover" src="/uploads/images/<%=channelUser.profileImg%>" alt="">
             </div>
             <div class="details">
-                <h1 class="text-4xl font-bold mb-2"><%=loggedUser.username%></h1>
-                <p class="text-sm text-zinc-700 font-medium mb-2"><%=loggedUser.channelName%></p>
-                <p class="text-sm text-zinc-700 font-medium mb-4">More about this channel <i class="ri-arrow-right-s-line"></i></p>
-                <button class="px-4 py-1.5 text-sm mr-2 captiliaze font-medium bg-zinc-200 rounded-3xl">Customise channel</button>
-                <button class="px-4 py-1.5 text-sm captiliaze font-medium bg-zinc-200 rounded-3xl">manage videos</button>
-                
+                <h1 class="text-4xl font-bold mb-2"><%=channelUser.username%></h1>
+                <p class="text-sm text-zinc-700 font-medium mb-2"><%=channelUser.channelName%></p>
+                <p class="text-sm text-zinc-700 font-medium mb-4">More about this channel <i
+                        class="ri-arrow-right-s-line"></i></p>
+                <button class="px-4 py-1.5 text-sm mr-2 captiliaze font-medium bg-zinc-200 rounded-3xl">Customise
+                    channel</button>
+                <button class="px-4 py-1.5 text-sm captiliaze font-medium bg-zinc-200 rounded-3xl">manage
+                    videos</button>
+
             </div>
         </div>
         <div class="caetogary px-20 border-b border-b-zinc-200 w-full mb-4 flex gap-5 items-center">
-            <h1 class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">Home</h1>
-            <h1 class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">Videos</h1>
-            <h1 class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">Playlist</h1>
+            <h1 onclick="underLine(this)"
+                class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-black">Home</h1>
+            <h1 onclick="underLine(this)"
+                class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">Videos</h1>
+            <h1 onclick="underLine(this)"
+                class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">Playlist</h1>
             <i class="ri-search-line text-lg text-zinc-500"></i>
-            <input class="outline-none py-[.6vw] focus:border-b-zinc-900 border-b-transparent border-b-2 mt-auto -ml-3" type="text">
+            <input class="outline-none py-[.6vw] focus:border-b-zinc-900 border-b-transparent border-b-2 mt-auto -ml-3"
+                type="text">
         </div>
-        <div class="videos px-20 flex flex-wrap gap-5 overflow-y-auto h-[85vh] py-2">
-            <div class="w-[26vw] mb-1 playlist relative">
+        <div class="videos px-20 grid grid-cols-2 md:grid-cols-3 gap-5 overflow-y-auto h-[85vh] py-2">
+            <div class=" mb-1 playlist relative">
                 <div class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 "></div>
                 <div class="h-56 w-[98%] rounded-xl -top-1  absolute left-1/2 -translate-x-1/2 bg-zinc-400 "></div>
                 <video class="rounded-xl relative h-56 bg-zinc-200 mb-2" src="">
@@ -36,7 +43,8 @@
                     <h4 class="text-sm">23 hours ago</h4>
                 </div>
             </div>
-            <div class="w-[26vw] mb-1 video">
+
+            <div class=" mb-1 video">
                 <div class="rounded-xl h-56 bg-zinc-200 mb-2">
                 </div>
                 <h2 class="leading-tight">Attitude | Stand-up Comedy by Ravi Gupta Lorem ipsum dolor sit amet
@@ -48,13 +56,27 @@
                     <h4 class="text-sm">23 hours ago</h4>
                 </div>
             </div>
+      
 
 
         </div>
 
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
+        integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+
+
+        function underLine(elem) {
+            document.querySelectorAll(".caetogary h1").forEach(elem => {
+                elem.style.borderBottom = '2px solid transparent';
+            });
+            axios.get(`/previewVideos/<%=channelUser.username%>/${elem.textContent}`)
+            elem.style.borderBottom = '2px solid black';
+        }
+    </script>
 
 
     <% include ./partials/footer.ejs %>
- 
