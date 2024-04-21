@@ -27,6 +27,10 @@ const playlistSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    type:{
+        type:String,
+        default:'playlist'
+    }
 
 })
 

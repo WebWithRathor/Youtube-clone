@@ -60,9 +60,9 @@ const uploadFileToBunnyCDN = (filePath, fileName) => {
 // -------home page ---------------------
 router.get('/', async function (req, res, next) {
   let loggedUser;
-  if (req.user) {
+  if (req.user){
     loggedUser = await userModel.findOne({ username: req.user.username })
-  } else {
+  }else{
     loggedUser = req.user;
   }
 
@@ -70,110 +70,95 @@ router.get('/', async function (req, res, next) {
   res.render('index.ejs', { loggedUser, videos, left: true });
 });
 
+// -------------------------all videos --------------------
+router.get('/allvideos', async (req, res) => {
+  const videos = await videoModel.find({user:req.user.id})
+  res.status(200).json(videos);
+})
+
+// -----------------------creating playlist ---------------------
+router.post('/playlist/create',isloggedIn, async (req, res) => {
+  const playlist = new playlistModel(req.body);
+  playlist.user = req.user.id;
+  await playlist.save();
+  const loggedUser = await userModel.findOne({ username: req.user.username });
+  loggedUser.playlist.push(playlist._id);
+  await loggedUser.save();
+  res.status(200).redirect('/studio');
+})
+
 
 // -------------subscribe channel ---------------------
-router.get('/channel/:username', async function (req, res, next) {
-  let loggedUser;
-  if (req.user) {
-    loggedUser = await userModel.findOne({ username: req.user.username })
-  } else {
-    loggedUser = req.user;
-  }
-  const channelUser = await userModel.findOne({ username: req.params.username })
-  res.render('profile.ejs', { loggedUser, channelUser, left: true });
+router.get('/channel/:username', isloggedIn, async function (req, res, next) {
+  const loggedUser = await userModel.findOne({ username: req.user.username });
+  const channelUser = await userModel.findOne({ username: req.params.username }).populate({ path: 'uploadedVideos playlist', populate: { path: 'user' } })
+  const mergedArray = channelUser.uploadedVideos.concat(channelUser.playlist);
+  mergedArray.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
+  res.render('profile.ejs', { loggedUser, channelUser, left: true, mergedArray });
 });
 
 
 // ------------------------previewingVideos in channel page --------------------
 
 router.get('/previewVideos/:username/:type', async (req, res) => {
-  const type = req.params.type === 'Home' ? '2' : req.params.type === 'Videos' ? 'uploadedVideos' : 'playlist';
-  if (type === '2') {
-    const user = await userModel.findOne({ username: req.params.username }).populate(type);
+  const type = req.params.type === 'Home' ? 2 : req.params.type === 'Videos' ? 'uploadedVideos' : 'playlist';
+  if (type === 2) {
+    const user = await userModel.findOne({ username: req.params.username }).populate({ path: 'uploadedVideos playlist', populate: { path: 'user' } });
     const mergedArray = user.uploadedVideos.concat(user.playlist);
     mergedArray.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
+    res.status(200).json(mergedArray);
   } else {
-    const user = await userModel.findOne({ username: req.params.username }).populate(type);
+    const user = await userModel.findOne({ username: req.params.username }).populate({ path: type, populate: { path: 'user' } });
     res.status(200).json(user[type]);
   }
-  console.log();
 });
 
 // --------------playlist-----------
 router.get('/playlist', async function (req, res, next) {
-  let loggedUser;
-  if (req.user) {
-    loggedUser = await userModel.findOne({ username: req.user.username })
-  } else {
-    loggedUser = req.user;
-  }
+
+  const loggedUser = await userModel.findOne({ username: req.user.username })
   res.render('playlist.ejs', { loggedUser, left: true });
 });
 
 // ----------------profile---------------
-router.get('/studio', async function (req, res, next) {
-  let loggedUser;
-  if (req.user) {
-    loggedUser = await userModel.findOne({ username: req.user.username }).populate('uploadedVideos')
-  } else {
-    loggedUser = req.user;
-  }
+router.get('/studio', isloggedIn, async function (req, res, next) {
+  const loggedUser = await userModel.findOne({ username: req.user.username }).populate('uploadedVideos')
   res.render('studio.ejs', { loggedUser });
 });
 
 // -----------------------history page-----------
-router.get('/history', async function (req, res, next) {
-  let loggedUser;
-  if (req.user) {
-    loggedUser = await userModel.findOne({ username: req.user.username })
-  } else {
-    loggedUser = req.user;
-  }
+router.get('/history',isloggedIn, async function (req, res, next) {
+
+  const loggedUser = await userModel.findOne({ username: req.user.username })
   res.render('history.ejs', { loggedUser, left: true });
 });
 
 // -----------------------search results--------------
-router.get('/results', async function (req, res, next) {
-  let loggedUser;
-  if (req.user) {
-    loggedUser = await userModel.findOne({ username: req.user.username })
-  } else {
-    loggedUser = req.user;
-  }
+router.get('/results',isloggedIn, async function (req, res, next) {
+
+  const loggedUser = await userModel.findOne({ username: req.user.username })
   res.render('results.ejs', { loggedUser, left: true });
 });
 
 // --------------------shorts----------------------
-router.get('/shorts', async function (req, res, next) {
-  let loggedUser;
-  if (req.user) {
-    loggedUser = await userModel.findOne({ username: req.user.username })
-  } else {
-    loggedUser = req.user;
-  }
+router.get('/shorts',isloggedIn, async function (req, res, next) {
+
+  const loggedUser = await userModel.findOne({ username: req.user.username })
   res.render('shorts.ejs', { loggedUser, left: true });
 });
 
 // -----------------------about you----------------
-router.get('/you', async function (req, res, next) {
-  let loggedUser;
-  if (req.user) {
-    loggedUser = await userModel.findOne({ username: req.user.username })
-  } else {
-    loggedUser = req.user;
-  }
+router.get('/you',isloggedIn, async function (req, res, next) {
+
+  const loggedUser = await userModel.findOne({ username: req.user.username })
   res.render('you.ejs', { loggedUser, left: true });
 });
 
 // ----------------------------streaming video ------------------------
 
 router.get('/openVideo/:title', isloggedIn, async function (req, res, next) {
-  let loggedUser;
-  if (req.user) {
-    loggedUser = await userModel.findOne({ username: req.user.username })
-  } else {
-    loggedUser = req.user;
-  }
+
+  const loggedUser = await userModel.findOne({ username: req.user.username })
   const video = await videoModel.findOne({ title: req.params.title }).populate('user').populate({ path: 'comments', populate: { path: 'replies user' } });
   if (video.views.indexOf(loggedUser._id) === -1) {
     video.views.push(loggedUser._id);
@@ -190,7 +175,7 @@ router.get('/openVideo/:title', isloggedIn, async function (req, res, next) {
 
 // ------------deleting Video -------------------
 
-router.get('/deleteVideo/:id', async function (req, res) {
+router.get('/deleteVideo/:id',isloggedIn, async function (req, res) {
   const video = await videoModel.findOneAndDelete({ _id: req.params.id });
   const user = await userModel.findOne({ username: req.user.username });
   user.uploadedVideos.splice(user.uploadedVideos.indexOf(req.params.id), 1);
@@ -210,8 +195,6 @@ router.post('/updateVideo/:id', async function (req, res) {
     visibility: req.body.visibility,
   },
     { new: true });
-  console.log(video);
-  console.log(tags);
   res.redirect('/studio');
 })
 
@@ -344,7 +327,6 @@ router.get('/showReplies', isloggedIn, async function (req, res, next) {
 router.get('/subscribe/:userid', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.session.passport.user.username });
   const videoUser = await userModel.findOne({ _id: req.params.userid })
-  console.log(videoUser)
   let subs;
   if (loggedUser.subscribed.indexOf(videoUser._id) === -1) {
     loggedUser.subscribed.push(videoUser._id);
