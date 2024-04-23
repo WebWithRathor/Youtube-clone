@@ -30,6 +30,7 @@
         <div class="videos px-20 grid grid-cols-2 md:grid-cols-3 gap-5 overflow-y-auto h-[85vh] py-2">
             <%mergedArray.forEach(function(video){%>
                 <%if(video.type === 'video' || video.type === 'short'){%>
+                    <a href="/openVideo/<%=video.title%>">
                     <div class=" mb-1 video">
                         <div class="rounded-xl h-56 bg-zinc-200 mb-2">
                         </div>
@@ -41,6 +42,7 @@
                             <h4 class="text-sm"><%=video.uploadDate.toLocaleDateString('en-US', { date:'long' }) %></h4>
                         </div>
                     </div>
+                </a>
                 <%}else{%>
                     <div class=" mb-1 playlist relative">
                         <div class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 "></div>
@@ -48,13 +50,12 @@
                         <video class="rounded-xl relative h-56 bg-zinc-200 mb-2" src="">
                         </video>
         
-                        <h2 class="leading-tight">Attitude | Stand-up Comedy by Ravi Gupta Lorem ipsum dolor sit amet
-                            consectetur adipisicing elit.</h2>
-                        <h4 class="text-zinc-500 text-sm">channel name</h4>
+                        <h2 class="leading-tight"><%=video.description%></h2>
+                        <h4 class="text-zinc-500 text-sm"><%=video.user.channelName%></h4>
                         <div class="flex gap-1 items-center text-zinc-500">
-                            <h4 class="text-sm">15 views</h4>
+                            <h4 class="text-sm"><%=video.views.length%> views</h4>
                             <i class="ri-circle-fill text-[4px]"></i>
-                            <h4 class="text-sm">23 hours ago</h4>
+                            <h4 class="text-sm"><%=video.uploadDate.toLocaleDateString('en-US', { date:'long' })%></h4>
                         </div>
                     </div>
                 <%}%>
@@ -82,6 +83,7 @@
             axios.get(`/previewVideos/<%=channelUser.username%>/${elem.textContent}`).then(function(response) {
                 document.querySelector('.videos').innerHTML = '';
                 response.data.forEach(function(video){
+                    console.log(video.type)
                     if(video.type !== 'playlist'){
                         document.querySelector('.videos').innerHTML += `
                         <div class=" mb-1 video">
@@ -104,12 +106,12 @@
                 <video class="rounded-xl relative h-56 bg-zinc-200 mb-2" src="">
                 </video>
 
-                <h2 class="leading-tight">${vidoe.description}</h2>
+                <h2 class="leading-tight">${video.description}</h2>
                 <h4 class="text-zinc-500 text-sm">${video.user.channelName}</h4>
                 <div class="flex gap-1 items-center text-zinc-500">
                     <h4 class="text-sm">${video.views.length} views</h4>
                     <i class="ri-circle-fill text-[4px]"></i>
-                    <h4 class="text-sm">${video.uploadDate.toLocaleDateString('en-US', { date:'long' })}</h4>
+                    <h4 class="text-sm">${video.uploadDate}</h4>
                 </div>
             </div>`;
                         
