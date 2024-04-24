@@ -27,7 +27,7 @@
             <input class="outline-none py-[.6vw] focus:border-b-zinc-900 border-b-transparent border-b-2 mt-auto -ml-3"
                 type="text">
         </div>
-        <div class="videos px-20 grid grid-cols-2 md:grid-cols-3 gap-5 overflow-y-auto h-[85vh] py-2">
+        <div class="videos px-20 grid grid-cols-2 md:grid-cols-3 gap-5  h-[55vh] overflow-y-auto py-2">
             <%mergedArray.forEach(function(video){%>
                 <%if(video.type === 'video' || video.type === 'short'){%>
                     <a href="/openVideo/<%=video.title%>">
@@ -83,7 +83,6 @@
             axios.get(`/previewVideos/<%=channelUser.username%>/${elem.textContent}`).then(function(response) {
                 document.querySelector('.videos').innerHTML = '';
                 response.data.forEach(function(video){
-                    console.log(video.type)
                     if(video.type !== 'playlist'){
                         document.querySelector('.videos').innerHTML += `
                         <div class=" mb-1 video">
