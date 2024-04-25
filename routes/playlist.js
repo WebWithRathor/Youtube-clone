@@ -30,6 +30,10 @@ const playlistSchema = mongoose.Schema({
     type:{
         type:String,
         default:'playlist'
+    },
+    visibility:{
+        type:Boolean,
+        default:false
     }
 
 })

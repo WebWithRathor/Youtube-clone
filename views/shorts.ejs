@@ -1,57 +1,55 @@
 <%include ./partials/header%>
 <div class="right h-[85vh] flex-1 relative px-6 overflow-y-auto">
-    <div class="short-container flex items-end justify-center py-3 mb-4">
-        <div class="short-panel w-[20rem] h-[80vh] bg-zinc-200 rounded-lg overflow-hidden">
+    <div class="container mx-auto  p-4 relative overflow-hidden">
+        <div class="content flex flex-col gap-10 transition-transform duration-500">
+            <div class="short-container flex justify-center overflow-hidden relative">
+                <div class="short-panel w-[20rem] h-[80vh] bg-zinc-200 rounded-lg overflow-hidden">
+                    <!-- Slide content goes here -->
+                </div>
+                <div class="options flex flex-col px-3">
+                    <!-- Options content goes here -->
+                </div>
+            </div>
+            <!-- Add more slides -->
+            <div class="short-container flex justify-center overflow-hidden relative">
+                <div class="short-panel w-[20rem] h-[80vh] bg-zinc-200 rounded-lg overflow-hidden">
+                    <!-- Slide content goes here -->
+                </div>
+                <div class="options flex flex-col px-3">
+                    <!-- Options content goes here -->
+                </div>
+            </div>
+            <!-- Add more slides -->
         </div>
-        <div class="options flex flex-col px-3">
-            <div class="text-center mb-5">
-                <i class="ri-thumb-up-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-                <h2 class="mt-1.5 text-md">11k</h2>
-            </div>
-            <div class="text-center mb-5">
-                <i class="ri-thumb-down-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-                <h2 class="mt-1.5 text-md">Dislike</h2>
-            </div>
-            <div class="text-center mb-5">
-                <i class="ri-message-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-                <h2 class="mt-1.5 text-md">386</h2>
-            </div>
-            <div class="text-center mb-5">
-                <i class="ri-share-forward-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full l"></i>
-                <h2 class="mt-1.5 text-md">Share</h2>
-            </div>
-            <div class="text-center mb-5">
-                <i class="ri-more-2-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-            </div>
-            <img src="https://yt3.googleusercontent.com/ytc/AIdro_lxymYXNITfuoAkr58fuQ1TCLZmjmHSG2IpYX20xw=s176-c-k-c0x00ffffff-no-rj" alt="" class="w-10 object-cover rounded-lg aspect-square bg-zinc-800">
-        </div>
-    </div>
-    <div class="short-container flex items-end justify-center mb-4">
-        <div class="short-panel w-80 h-[80vh] bg-zinc-200">
-        </div>
-        <div class="options flex flex-col px-3">
-            <div class="text-center mb-5">
-                <i class="ri-thumb-up-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-                <h2 class="mt-1.5 text-md">11k</h2>
-            </div>
-            <div class="text-center mb-5">
-                <i class="ri-thumb-down-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-                <h2 class="mt-1.5 text-md">Dislike</h2>
-            </div>
-            <div class="text-center mb-5">
-                <i class="ri-message-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-                <h2 class="mt-1.5 text-md">386</h2>
-            </div>
-            <div class="text-center mb-5">
-                <i class="ri-share-forward-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full l"></i>
-                <h2 class="mt-1.5 text-md">Share</h2>
-            </div>
-            <div class="text-center mb-5">
-                <i class="ri-more-2-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-            </div>
-            <img src="https://yt3.googleusercontent.com/ytc/AIdro_lxymYXNITfuoAkr58fuQ1TCLZmjmHSG2IpYX20xw=s176-c-k-c0x00ffffff-no-rj" alt="" class="w-10 object-cover rounded-lg aspect-square bg-zinc-800">
-        </div>
-    </div>
+
 
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+     document.addEventListener('DOMContentLoaded', function () {
+        const container = document.querySelector('.container');
+        const content = document.querySelector('.content');
+        const items = document.querySelectorAll('.short-container');
+
+        let currentIndex = 0;
+
+        container.addEventListener('wheel', function (event) {
+            event.preventDefault();
+            
+            const delta = Math.sign(event.deltaY);
+
+            if (delta > 0 && currentIndex < items.length - 1) {
+                currentIndex++;
+            } else if (delta < 0 && currentIndex > 0) {
+                currentIndex--;
+            }
+
+            const itemHeight = items[0].offsetHeight;
+            const newPosition = currentIndex * -itemHeight;
+
+            content.style.transform = `translateY(${newPosition}px)`;
+        });
+    });
+</script>
 <%include ./partials/footer%>

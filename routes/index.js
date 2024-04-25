@@ -79,6 +79,7 @@ router.get('/allvideos', async (req, res) => {
 // -----------------------creating playlist ---------------------
 router.post('/playlist/create',isloggedIn, async (req, res) => {
   const playlist = new playlistModel(req.body);
+  console.log(req.body);
   playlist.user = req.user.id;
   await playlist.save();
   const loggedUser = await userModel.findOne({ username: req.user.username });
@@ -87,6 +88,12 @@ router.post('/playlist/create',isloggedIn, async (req, res) => {
   res.status(200).redirect('/studio');
 })
 
+// ---------------------------update Playlist ------------------------
+
+router.get('/findPlaylist/:id', async (req, res) => {
+  const playlist = await playlistModel.findOne({ _id: req.params.id });
+  res.status(200).json(playlist);
+})
 
 // -------------subscribe channel ---------------------
 router.get('/channel/:username', isloggedIn, async function (req, res, next) {
