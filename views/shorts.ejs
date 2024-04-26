@@ -1,55 +1,131 @@
 <%include ./partials/header%>
-<div class="right h-[85vh] flex-1 relative px-6 overflow-y-auto">
-    <div class="container mx-auto  p-4 relative overflow-hidden">
-        <div class="content flex flex-col gap-10 transition-transform duration-500">
-            <div class="short-container flex justify-center overflow-hidden relative">
-                <div class="short-panel w-[20rem] h-[80vh] bg-zinc-200 rounded-lg overflow-hidden">
-                    <!-- Slide content goes here -->
+    <div id="parentDiv" class="right scroll-smooth h-[85vh] flex-1 relative px-6 overflow-y-auto">
+
+        <div id="child2" class="short-container transition-all duration-700 flex items-end justify-center py-3 mb-4">
+
+            <div class="short-panel relative flex items-center justify-center w-[20rem] h-[80vh]  rounded-lg overflow-hidden">
+                <div class="thumbnail absolute top-0 left-0 w-full h-full pointer-events-none">
+                    <video autoplay muted loop controls src="<%=shortUrl%>" class="h-full w-full object-cover"></video>
                 </div>
-                <div class="options flex flex-col px-3">
-                    <!-- Options content goes here -->
-                </div>
++
             </div>
-            <!-- Add more slides -->
-            <div class="short-container flex justify-center overflow-hidden relative">
-                <div class="short-panel w-[20rem] h-[80vh] bg-zinc-200 rounded-lg overflow-hidden">
-                    <!-- Slide content goes here -->
+            <div class="options flex flex-col px-3">
+                <div class="text-center mb-5">
+                    <button id="like-video-btn" onclick="toggleLike(this, '<%=short._id%>')">
+                    <i
+                        class="ri-<%= short.likes.indexOf(loggedUser._id) === -1 ? 'thumb-up-line' : 'thumb-up-fill' %> text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                    </button>
+                    <h2 id="like-num" class="mt-1.5 text-md"><%=short.likes.length%></h2>
                 </div>
-                <div class="options flex flex-col px-3">
-                    <!-- Options content goes here -->
+                <div class="text-center mb-5">
+                    <button id="dislike-video-btn" onclick="toggleDislike(this, '<%=short._id%>')">
+                    <i 
+                        class="ri-<%= short.dislikes.indexOf(loggedUser._id) === -1 ? 'thumb-down-line' : 'thumb-down-fill' %> text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                    </button>
+                    <h2 class="mt-1.5 text-md">Dislike</h2>
                 </div>
+                <div class="text-center mb-5">
+                    <i
+                        class="ri-share-forward-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full l"></i>
+                    <h2 class="mt-1.5 text-md">Share</h2>
+                </div>
+                <div class="text-center mb-5">
+                    <i
+                        class="ri-more-2-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                </div>
+                <img src="https://yt3.googleusercontent.com/ytc/AIdro_lxymYXNITfuoAkr58fuQ1TCLZmjmHSG2IpYX20xw=s176-c-k-c0x00ffffff-no-rj"
+                    alt="" class="w-10 object-cover rounded-lg aspect-square bg-zinc-800">
             </div>
-            <!-- Add more slides -->
         </div>
 
+        <div class="short-container  flex items-end justify-center mb-4 transition-all duration-700 relative">
+            <div class="short-panel w-80 h-[80vh] bg-[#fcfefc] overflow-hidden relative ">
+                <div class="thumbnail absolute top-0 left-0 w-full h-full pointer-events-none flex items-center">
+                    <img class="w-full object-contain " src="https://i.pinimg.com/originals/f3/98/c8/f398c8e928e0886d86c00e7770ccab78.gif" alt="">
+                </div>
+            </div>
+            <div class="options flex flex-col px-3">
+                <div class="text-center mb-5">
+                    <i
+                        class="ri-thumb-up-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                    <h2 class="mt-1.5 text-md">...</h2>
+                </div>
+                <div class="text-center mb-5">
+                    <i
+                        class="ri-thumb-down-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                    <h2 class="mt-1.5 text-md">...</h2>
+                </div>
+                <div class="text-center mb-5">
+                    <i
+                        class="ri-share-forward-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full l"></i>
+                    <h2 class="mt-1.5 text-md">...</h2>
+                </div>
+                <div class="text-center mb-5">
+                    <i
+                        class="ri-more-2-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                </div>
+                <img src="https://yt3.googleusercontent.com/ytc/AIdro_lxymYXNITfuoAkr58fuQ1TCLZmjmHSG2IpYX20xw=s176-c-k-c0x00ffffff-no-rj"
+                    alt="" class="w-10 object-cover rounded-lg aspect-square bg-zinc-800">
+            </div>
+        </div>
 
-</div>
+    </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script>
-     document.addEventListener('DOMContentLoaded', function () {
-        const container = document.querySelector('.container');
-        const content = document.querySelector('.content');
-        const items = document.querySelectorAll('.short-container');
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
+        integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
 
-        let currentIndex = 0;
-
-        container.addEventListener('wheel', function (event) {
-            event.preventDefault();
-            
-            const delta = Math.sign(event.deltaY);
-
-            if (delta > 0 && currentIndex < items.length - 1) {
-                currentIndex++;
-            } else if (delta < 0 && currentIndex > 0) {
-                currentIndex--;
+        document.querySelector(".short-container").addEventListener("wheel", function (dets) {
+            if (dets.target.parentNode === document.querySelector('.short-container')) {
+                let rightElement = document.querySelector('.right');
+                if (dets.wheelDeltaY < 0) {
+                    rightElement.scrollTop = rightElement.scrollHeight;
+                    setTimeout(()=>{
+                        window.location.href =`/shorts/<%=index%>/`
+                    },1200)
+                }
             }
+        })
+            function toggleLike(btn, videoId) {
+            if (!'<%=loggedUser.username%>') return alert('Please sign in!!')
 
-            const itemHeight = items[0].offsetHeight;
-            const newPosition = currentIndex * -itemHeight;
+            const likeIcon = btn.querySelector('i')
+            const dislikeIcon = document.querySelector('#dislike-video-btn i')
+            if (likeIcon.classList.contains('ri-thumb-up-line') && dislikeIcon.classList.contains('ri-thumb-down-fill')) {
+                dislikeIcon.classList.remove('ri-thumb-down-fill')
+                dislikeIcon.classList.add('ri-thumb-down-line')
+            }
+            likeIcon.classList.toggle('ri-thumb-up-line')
+            likeIcon.classList.toggle('ri-thumb-up-fill')
+            axios.get(`/like/${videoId}`)
+                .then(response => {
+                    console.log(btn.parentNode.querySelector('#like-num'))
 
-            content.style.transform = `translateY(${newPosition}px)`;
-        });
-    });
-</script>
-<%include ./partials/footer%>
+                    btn.parentNode.querySelector('#like-num').innerHTML = response.data.likes.length
+                })
+        }
+
+        function toggleDislike(btn, videoId) {
+            if (!'<%=loggedUser.username%>') return alert('Please sign in!!')
+
+            const dislikeIcon = btn.querySelector('i')
+            const likeIcon = document.querySelector('#like-video-btn i')
+            if (dislikeIcon.classList.contains('ri-thumb-down-line') && likeIcon.classList.contains('ri-thumb-up-fill')) {
+                likeIcon.classList.remove('ri-thumb-up-fill')
+                likeIcon.classList.add('ri-thumb-up-line')
+            }
+            dislikeIcon.classList.toggle('ri-thumb-down-fill')
+            dislikeIcon.classList.toggle('ri-thumb-down-line')
+            axios.get(`/dislike/${videoId}`)
+                .then(response => {
+                    console.log(btn.parentNode.parentNode.querySelector('#like-num'))
+                    btn.parentNode.parentNode.querySelector('#like-num').innerHTML = response.data.likes.length
+                })
+
+
+        }
+
+    </script>
+
+    <%include ./partials/footer%>
