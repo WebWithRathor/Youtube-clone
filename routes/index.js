@@ -198,6 +198,18 @@ router.get('/openVideo/:title', isloggedIn, async function (req, res, next) {
   let showVideo = await videoModel.find({ _id: { $ne: video._id } }).populate('user');
   showVideo = showVideo.map(video => ({ ...video.toObject(), uploadDate: require('../utils/timeController.js').timeDiffer(video.uploadDate) }));
 
+  const alreadyWatchedIndex = loggedUser.watchedVideo.findIndex(item => item.video.equals(video._id));
+    if (alreadyWatchedIndex !== -1) {
+      loggedUser.watchedVideo.splice(alreadyWatchedIndex, 1);
+    }
+    loggedUser.watchedVideo.push({ video: video._id });
+    await loggedUser.save();
+  }
+
+
+
+
+
   const videoUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${video.filename}?accesskey=${STREAM_KEY}`;
 
   res.render('openVideo', { video, videoUrl, uploadDate, showVideo, loggedUser, left: false })
