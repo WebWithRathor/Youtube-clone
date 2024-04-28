@@ -1,3 +1,5 @@
+const videoModel = require('../routes/video.js');
+
 
 exports.categorizeVideos = async (allWatchedVideos)=>{
  
@@ -13,25 +15,26 @@ exports.categorizeVideos = async (allWatchedVideos)=>{
     };
 
     // Iterate over each watched video
-    allWatchedVideos.forEach(video => {
-        console.log(video);
-        // Determine the category based on uploadDate
-        const uploadDate = new Date(video.uploadDate);
+    allWatchedVideos.forEach(videoObj => {
+        // Determine the category based on createdDate
+        const createdDate = new Date(videoObj.watchedAt);
         let category;
-        if (uploadDate.toDateString() === today.toDateString()) {
+        if (createdDate.toDateString() === today.toDateString()) {
             category = "today";
-        } else if (uploadDate.toDateString() === yesterday.toDateString()) {
+        } else if (createdDate.toDateString() === yesterday.toDateString()) {
             category = "yesterday";
         } else {
             category = "others";
         }
 
         // Determine the type of video
-        if (video.type === "short") {
-            categorizedVideos[category].shorts.push(video);
+        if (videoObj.video.type === "short") {
+            categorizedVideos[category].shorts.push(videoObj.video);
         } else {
-            categorizedVideos[category].videos.push(video);
+            categorizedVideos[category].videos.push(videoObj.video);
         }
     });
+    console.log(categorizedVideos)
+
     return categorizedVideos;
 }

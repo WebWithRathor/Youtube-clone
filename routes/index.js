@@ -13,6 +13,7 @@ const fs = require('fs');
 const axios = require('axios');
 const video = require('./video.js');
 const { populate } = require('dotenv');
+const {categorizeVideos}= require('../utils/historycategory.js')
 
 passport.use(new GoogleStrategy({
   clientID: process.env['GOOGLE_CLIENT_ID'],
@@ -135,10 +136,13 @@ router.get('/studio', isloggedIn, async function (req, res, next) {
 
 // -----------------------history page-----------
 router.get('/history',isloggedIn, async function (req, res, next) {
+  const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
+    .populate('watchedVideo')
+    .populate({ path: 'watchedVideo', populate: 'video' })
 
-  const loggedUser = await userModel.findOne({ username: req.user.username }).populate('watchedVideos');
-  const categorizeVideos = await require('../utils/shortsDate.js').categorizeVideos(loggedUser.watchedVideos);
-  res.render('history.ejs', { loggedUser, left: true ,allHistory : categorizeVideos });
+  const allHistory = await categorizeVideos(loggedUser.watchedVideo);
+  
+  res.render('history.ejs', { leftSection: true, loggedUser, allHistory });
 });
 
 // -----------------------search results--------------
