@@ -13,14 +13,14 @@
                 <div class="text-center mb-5">
                     <button id="like-video-btn" onclick="toggleLike(this, '<%=short._id%>')">
                     <i
-                        class="ri-<%= short.likes.indexOf(loggedUser._id) === -1 ? 'thumb-up-line' : 'thumb-up-fill' %> text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                        class="ri-<%= loggedUser ? short.likes.indexOf(loggedUser._id) === -1 ? 'thumb-up-line' : 'thumb-up-fill' : 'thumb-up-line' %> text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
                     </button>
                     <h2 id="like-num" class="mt-1.5 text-md"><%=short.likes.length%></h2>
                 </div>
                 <div class="text-center mb-5">
                     <button id="dislike-video-btn" onclick="toggleDislike(this, '<%=short._id%>')">
                     <i 
-                        class="ri-<%= short.dislikes.indexOf(loggedUser._id) === -1 ? 'thumb-down-line' : 'thumb-down-fill' %> text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                        class="ri-<%= loggedUser ? short.dislikes.indexOf(loggedUser._id) === -1 ? 'thumb-down-line' : 'thumb-down-fill' : 'thumb-down-line' %> text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
                     </button>
                     <h2 class="mt-1.5 text-md">Dislike</h2>
                 </div>
@@ -88,7 +88,7 @@
             }
         })
             function toggleLike(btn, videoId) {
-            if (!'<%=loggedUser.username%>') return alert('Please sign in!!')
+            if (!'<%=shorts%>') return alert('Please sign in!!')
 
             const likeIcon = btn.querySelector('i')
             const dislikeIcon = document.querySelector('#dislike-video-btn i')
@@ -100,14 +100,13 @@
             likeIcon.classList.toggle('ri-thumb-up-fill')
             axios.get(`/like/${videoId}`)
                 .then(response => {
-                    console.log(btn.parentNode.querySelector('#like-num'))
 
                     btn.parentNode.querySelector('#like-num').innerHTML = response.data.likes.length
                 })
         }
 
         function toggleDislike(btn, videoId) {
-            if (!'<%=loggedUser.username%>') return alert('Please sign in!!')
+            if (!'<%=shorts%>') return alert('Please sign in!!')
 
             const dislikeIcon = btn.querySelector('i')
             const likeIcon = document.querySelector('#like-video-btn i')
@@ -119,7 +118,6 @@
             dislikeIcon.classList.toggle('ri-thumb-down-line')
             axios.get(`/dislike/${videoId}`)
                 .then(response => {
-                    console.log(btn.parentNode.parentNode.querySelector('#like-num'))
                     btn.parentNode.parentNode.querySelector('#like-num').innerHTML = response.data.likes.length
                 })
 

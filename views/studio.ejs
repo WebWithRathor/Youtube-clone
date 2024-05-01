@@ -123,7 +123,7 @@
                         <% if(loggedUser.uploadedVideos.length <=0 ) {%>
                             <h1 class="mt-[15%] text-center text-lg text-zinc-400 font-medium">No videos uploaded</h1>
                             <%}else{%>
-                                <% loggedUser.uploadedVideos.forEach(function(video,i){%>
+                                <% mergedArray.forEach(function(video,i){%>
                                     <div class="video border-b py-3 flex justify-between relative">
                                         <h1>
                                             <%=i+1%>
@@ -131,9 +131,10 @@
                                         <a href="/openVideo/<%=video.title%>">
                                             <div class="video-desc flex gap-3">
                                                 <div class="video-wrapper h-[12vh] w-[10vw] rounded-2xl relative">
-                                                    <div
-                                                        class="overlay h-full w-full rounded-2xl bg-zinc-500 absolute top-[-4%] left-[-3%] z-[-1]">
-                                                    </div>
+                                                    <% if(video.type === 'playlist'){%>
+                                                        <div class="overlay h-full w-full rounded-2xl bg-zinc-500 absolute top-[-4%] left-[-3%] z-[-1]"></div> 
+                                                    <%}%>
+
                                                     <% if(video.thumbnail){ %>
                                                         <img src="/uploads/images/<%=video.thumbnail%>"
                                                             class="z-10  pointer-events-none h-full w-full object-cover rounded-2xl absolute left-0"
@@ -141,7 +142,7 @@
                                                         <%}%>
                                                             <video preload="metadata" controlsList="false"
                                                                 src="/uploads/videos/<%=video.filename%>" muted loop
-                                                                class="h-full w-full object-cover rounded-2xl">
+                                                                class="h-full w-full bg-black object-cover rounded-2xl">
                                                             </video>
                                                 </div>
                                                 <div class="description w-[15vw]">
@@ -167,18 +168,28 @@
                                         <h1>
                                             <%=video.likes.length%> likes
                                         </h1>
-                                        <h1>
-                                            <%=video.comments.length%> comments
-                                        </h1>
+                                        <% if(video.comments){ %>
+                                            <h1>
+                                                <%=video.comments.length%> comments
+                                            </h1>
+                                            <% }else{%>
+                                                <h1 class="px-3">
+                                                <%= video.videos.length %> videos
+                                            </h1>
+                                            <%} %>
                                         <div class="icons">
-                                            <i onclick="editVideo('<%=video._id%>',this)" class="ri-edit-line mr-2"></i>
+                                            <% if(video.type === 'playlist') {%>
+                                                <i onclick="editPlaylist('<%=video._id%>',this)"  class="ri-edit-line mr-2"></i>
+                                                <%}else{%>
+                                                    <i onclick="editVideo('<%=video._id%>',this)"  class="ri-edit-line mr-2"></i>
+                                                    <%}%>
                                             <a href="/deleteVideo/<%=video._id%>"><i
                                                     class="ri-delete-bin-2-line"></i></a>
                                         </div>
                                     </div>
                                     <%})%>
 
-                                        <%}%>
+                            <%}%>
                     </div>
                 </div>
             </div>
