@@ -1,6 +1,6 @@
 <%include ./partials/header%>
   <link rel="stylesheet" href="/style.css">
-  <div class="leftside w-2/3 h-full overflow-y-auto scrollbar pl-16 pr-12" onclick="scroll()">
+  <div class="leftside w-2/3 h-full overflow-y-auto scrollbar pl-16 pr-12" >
     <div class="playingvideo relative video-container paused w-full  mt-4 overflow-hidden rounded-2xl">
 
       <div class="video-container absolute bottom-1 paused w-full" data-volume-level="high">
@@ -245,11 +245,6 @@
         .then(function (res) {
           elem.parentNode.querySelector('.profile button h3').textContent = (res) ? 'Subscribed' : 'Subscribe'
         })
-    }
-
-    function scroll(){
-      console.log('asdjk')
-
     }
 
     function watchlater(elem, videoid) {
