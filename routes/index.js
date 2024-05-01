@@ -140,7 +140,7 @@ router.get('/history', async function (req, res, next) {
   if(req.user){
     const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
       .populate('watchedVideo')
-      .populate({ path: 'watchedVideo', populate: 'video' })
+      .populate({ path: 'watchedVideo', populate: {path:'video',populate:'user'} })
   
     const allHistory = await categorizeVideos(loggedUser.watchedVideo);
     res.render('history.ejs', { left: true, loggedUser, allHistory });

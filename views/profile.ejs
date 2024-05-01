@@ -26,9 +26,13 @@
             <input class="outline-none py-[.6vw] focus:border-b-zinc-900 border-b-transparent border-b-2 mt-auto -ml-3"
                 type="text">
         </div>
-        <div class="videos px-20 grid grid-cols-2 md:grid-cols-3 gap-5  h-[55vh] overflow-y-auto py-2">
-            <%mergedArray.forEach(function(video){%>
-                <%if(video.type === 'video' || video.type === 'short'){%>
+        <%if(mergedArray.length === 0){%>
+            <h1 class="w-[70vw] mt-20 text-zinc-500 my-auto text-xl font-semibold text-center">No Videos/Playlist uploaded</h1>
+        <%}else{%>
+                
+                <%mergedArray.forEach(function(video){%>
+                    <%if(video.type === 'video' || video.type === 'short'){%>
+                <div class="videos px-20 grid grid-cols-2 md:grid-cols-3 gap-5  h-[55vh] overflow-y-auto py-2">
                     <a href="/openVideo/<%=video.title%>">
                     <div class=" mb-1 video">
                         <div class="rounded-xl h-56 bg-zinc-200 mb-2">
@@ -62,12 +66,12 @@
                 <%}%>
             <%})%>
            
+        </div>
 
          
       
 
-
-        </div>
+            <%}%>
 
     </div>
 
