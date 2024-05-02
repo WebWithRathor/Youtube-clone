@@ -36,3 +36,12 @@ exports.categorizeVideos = async (allWatchedVideos)=>{
     });
     return categorizedVideos;
 }
+
+exports.subscribe = (users) => {
+    let mergedArray = [];
+    users.forEach(user => {
+        mergedArray.push(...user.playlist,...user.uploadedVideos)
+    });
+    mergedArray.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
+    return mergedArray;
+}
