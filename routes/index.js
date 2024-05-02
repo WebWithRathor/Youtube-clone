@@ -135,7 +135,6 @@ router.get('/playlist', async function (req, res, next) {
 // ----------------profile---------------
 router.get('/studio', isloggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username }).populate({ path: 'uploadedVideos playlist', populate: { path: 'user' } });
-  console.log(loggedUser)
   const mergedArray = loggedUser.uploadedVideos.concat(loggedUser.playlist);
   mergedArray.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
   res.render('studio.ejs', { loggedUser, mergedArray });
@@ -220,7 +219,6 @@ router.get('/you', async function (req, res, next) {
       .populate({ path: 'watchedlaterVideos' })
       .populate({ path: 'watchedVideo', populate: { path: 'video', populate: 'user' } })
   }
-  console.log(loggedUser.watchedlaterVideos)
   res.render('you.ejs', { left: true, loggedUser });
 });
 
