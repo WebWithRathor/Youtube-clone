@@ -11,11 +11,22 @@
                 <p class="text-sm text-zinc-700 font-medium mb-2">
                     <%=channelUser.channelName%>
                 </p>
+                
+                <% if(loggedUser){%>
+                    <% if (channelUser.username === loggedUser.username){%>
+                        <a href="/studio" target="_blank">
+                            <button class="px-4 py-1.5 text-sm captiliaze font-medium bg-zinc-200 rounded-3xl">manage
+                                videos</button>
+                        </a>
+                    <%}else{%>
+                            <button onclick="subscribe(this,'<%=channelUser._id%>')" class="px-4 py-1.5 text-sm captiliaze font-medium bg-zinc-200 rounded-3xl"><% if(loggedUser.subscribed.indexOf(channelUser._id) === -1) {%>
+                                <i class="ri-notification-2-line"></i> Subscribe 
+                                <%}else{%> 
+                                    <i class="ri-notification-2-fill"></i> Subscribed
+                                 <%}%></button>
+                    <%}%>
+                <%}%>
 
-                <a href="/studio" target="_blank">
-                    <button class="px-4 py-1.5 text-sm captiliaze font-medium bg-zinc-200 rounded-3xl">manage
-                        videos</button>
-                </a>
 
             </div>
         </div>
@@ -104,6 +115,13 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 
+    function subscribe(elem, userid) {
+      fetch(`/subscribe/${userid}`)
+        .then((res) => res.json())
+        .then(function (res) {
+          elem.innerHTML = (res) ? '<i class="ri-notification-2-fill"></i> Subscribed' : '<i class="ri-notification-2-line"></i> Subscribe'
+        })
+    }
 
         function underLine(elem) {
             document.querySelectorAll(".caetogary h1").forEach(elem => {

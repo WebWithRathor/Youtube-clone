@@ -69,8 +69,12 @@ router.get('/', async function (req, res, next) {
   const video = await videoModel.find().populate('user').limit(5)
   const playlist = await playlistModel.find().populate('user').limit(5)
   const videos = [...video,...playlist];
+  videos.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
   res.render('index.ejs', { loggedUser, videos, left: true });
 });
+
+
+
 
 // -------------------------all videos --------------------
 router.get('/allvideos', async (req, res) => {
@@ -208,11 +212,16 @@ router.get('/shorts/:index', async function (req, res, next) {
 
 // -----------------------about you----------------
 router.get('/you', async function (req, res, next) {
-  if (req.user) {
-    const loggedUser = await userModel.findOne({ username: req.user.username })
-    res.render('you.ejs', { loggedUser, left: true });
+  let loggedUser = req.user
+  if (loggedUser) {
+    loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
+      .populate('watchedVideo', 'likedVideos', 'watchedlaterVideos')
+      .populate({ path: 'likedVideos', populate: 'user' })
+      .populate({ path: 'watchedlaterVideos' })
+      .populate({ path: 'watchedVideo', populate: { path: 'video', populate: 'user' } })
   }
-  res.render('you.ejs', { loggedUser: undefined, left: true });
+  console.log(loggedUser.watchedlaterVideos)
+  res.render('you.ejs', { left: true, loggedUser });
 });
 
 // ------------------------subscriptions------------------------

@@ -1,10 +1,10 @@
 <% include ./partials/header.ejs %>
     <div class="right h-full flex-1 relative px-6">
         <div class="videos flex flex-wrap justify-start overflow-y-auto h-[85vh] py-2 pb-10">
-            <% if(videos.length === 0){%>
-                <h1 class="w-[80vw] text-center  my-auto font-medium text-zinc-400">No Subscribed channel.</h1>
+        <% if(videos.length === 0){%>
+            <h1 class="w-[80vw] text-center  my-auto font-medium text-zinc-400">No Subscribed channel.</h1>
                 <%}else{%>
-                    <h1 class="my-6 font-medium text-3xl ml-2">Latest</h1>
+                        <h1 class="my-6 font-medium text-3xl ml-2 w-full">Latest</h1>
                     <% videos.reverse().forEach(function(video){%>
                         <%if(video.type === 'playlist'){%>
                 <a href="/playlist/<%= video.title %>">
