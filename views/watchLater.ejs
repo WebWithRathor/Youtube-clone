@@ -1,7 +1,7 @@
 <% include ./partials/header.ejs %>
     <div class="right h-full flex-1 flex gap-3 relative px-6 pt-8">
         <div class="about-playlist flex flex-col items-center justify-center shrink-0 h-[95%] bg-zinc-300 w-[24vw] rounded-xl p-14">
-            <img class="h-[24vh] rounded-xl w-full bg-red-500 mb-3" src="" alt="">
+            <img class="h-[24vh] rounded-xl w-full bg-red-500 mb-3" src="/uploads/images/<%=loggedUser.watchedlaterVideos[0].thumbnail%>" alt="">
             <h1 class="text-3xl font-bold"></h1>
             <h4 class="mt-5 font-medium"></h4>
             <p class="text-zinc-600 text-sm mb-3"><%=loggedUser.watchedlaterVideos.length%> videos </p>
@@ -12,7 +12,7 @@
                 <a href="/openVideo/<%=video.title%>">
                 <div class="video flex gap-4 relative w-full mb-1 hover:bg-zinc-200 p-1 rounded-xl pl-8">
                     <h1 class="absolute top-1/2 -translate-y-1/2 left-2 font-medium"><%=i+1%></h1>
-                    <video class="bg-red-500 rounded-xl w-[11vw] h-[13.5vh]" src=""></video>
+                    <video class="bg-red-500 rounded-xl w-[11vw] h-[13.5vh] object-cover" src="/uploads/images/<%=video.thumbnail%>"></video>
                     <div class="video-dets">
                         <h1 class="font-medium text-[1.1vw] mb-2"><%=video.title%></h1>
                         <h2 class="text-sm text-zinc-700"><%=video.description%></h2>

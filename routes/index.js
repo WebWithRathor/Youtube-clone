@@ -103,7 +103,8 @@ router.get('/findPlaylist/:id', async (req, res) => {
 // -------------subscribe channel ---------------------
 router.get('/channel/:username', isloggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username });
-  const channelUser = await userModel.findOne({ username: req.params.username }).populate({ path: 'uploadedVideos playlist', populate: { path: 'user' } })
+  const channelUser = await userModel.findOne({ username: req.params.username }).populate({ path: 'uploadedVideos', populate: { path: 'user' } }).populate({ path: 'playlist', populate: { path: 'user videos' } });
+
   const mergedArray = channelUser.uploadedVideos.concat(channelUser.playlist);
   mergedArray.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
   res.render('profile.ejs', { loggedUser, channelUser, left: true, mergedArray });
@@ -134,7 +135,7 @@ router.get('/playlist', async function (req, res, next) {
 
 // ----------------profile---------------
 router.get('/studio', isloggedIn, async function (req, res, next) {
-  const loggedUser = await userModel.findOne({ username: req.user.username }).populate({ path: 'uploadedVideos playlist', populate: { path: 'user' } });
+  const loggedUser = await userModel.findOne({ username: req.user.username }).populate({ path: 'uploadedVideos', populate: { path: 'user' } }).populate({ path: 'playlist', populate: { path: 'user videos' } });
   const mergedArray = loggedUser.uploadedVideos.concat(loggedUser.playlist);
   mergedArray.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate));
   res.render('studio.ejs', { loggedUser, mergedArray });

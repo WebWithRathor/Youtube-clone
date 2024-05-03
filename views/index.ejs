@@ -20,7 +20,7 @@
         </div>
         <div class="videos flex flex-wrap justify-start overflow-y-auto h-[85vh] py-2 pb-10">
             <% if(videos.length === 0){%>
-                <h1 class="w-[80vw] text-center  my-auto font-medium text-zinc-400">No Subscribed channel.</h1>
+                <h1 class="w-[80vw] text-center  my-auto font-medium text-zinc-400">No Videos/Playlist are there.</h1>
                 <%}else{%>
             <% videos.reverse().forEach(function(video){%>
                 <%if(video.type === 'playlist'){%>

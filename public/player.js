@@ -104,7 +104,6 @@ function changePlaybackSpeed() {
 video.addEventListener("loadeddata", () => {
     totalTimeElem.textContent = formatDuration(video.duration)
 })
-
 video.addEventListener("timeupdate", () => {
     currentTimeElem.textContent = formatDuration(video.currentTime)
     const percent = video.currentTime / video.duration
