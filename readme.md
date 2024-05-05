@@ -18,6 +18,7 @@ This project is a YouTube clone web application built using Node.js, MongoDB, an
 - **Express.js**: Web application framework for Node.js.
 - **MongoDB**: NoSQL database for storing user data and video metadata.
 - **EJS**: Templating language for generating HTML markup.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
 - **Passport.js**: Authentication middleware.
 - **BunnyCDN**: Content delivery network for efficient video streaming.
 
