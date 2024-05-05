@@ -74,7 +74,7 @@
                                     <div
                                         class="h-56 w-[98%] rounded-xl -top-1  absolute left-1/2 -translate-x-1/2 bg-zinc-400 ">
                                     </div>
-                                    <video class="rounded-xl relative h-56 bg-zinc-200 mb-2" src="/uploads/images/<%=video.videos[0].thumbnail%>">
+                                    <video class="rounded-xl relative h-56 bg-zinc-200 mb-2 w-full object-cover" src="/uploads/images/<%=video.videos[0].thumbnail%>">
                                     </video>
 
                                     <h2 class="leading-tight">
@@ -129,6 +129,7 @@
                         document.querySelector('.videos').innerHTML += `
                         <div class=" mb-1 video">
                 <div class="rounded-xl h-56 bg-zinc-200 mb-2">
+                    <img src="/uploads/images/${video.thumbnail}" class="h-full w-full object-cover" alt="">
                 </div>
                 <h2 class="leading-tight">${video.description}</h2>
                 <h4 class="text-zinc-500 text-sm">${video.user.channelName}</h4>
@@ -144,7 +145,7 @@
                         <div class=" mb-1 playlist relative">
                 <div class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 "></div>
                 <div class="h-56 w-[98%] rounded-xl -top-1  absolute left-1/2 -translate-x-1/2 bg-zinc-400 "></div>
-                <video class="rounded-xl relative h-56 bg-zinc-200 mb-2" src="">
+                <video class="rounded-xl relative h-56 bg-zinc-200 mb-2 w-full object-cover" src="/uploads/images/${video.videos[0].thumbnail}">
                 </video>
 
                 <h2 class="leading-tight">${video.description}</h2>

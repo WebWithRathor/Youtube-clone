@@ -1,7 +1,13 @@
 <%include ./partials/header%>
+<style>
+  .overlay{
+    transition: all ease .2s;
+  }
+</style>
   <link rel="stylesheet" href="/style.css">
   <div class="leftside w-2/3 h-full overflow-y-auto scrollbar pl-16 pr-12" >
-    <div class="playingvideo relative video-container paused w-full  mt-4 overflow-hidden rounded-2xl">
+    <div class="playingvideo relative video-container paused w-full h-[35vw]  mt-4 overflow-hidden rounded-2xl">
+      <video class="w-full min-h-full h-full object-contain" src="<%=videoUrl%>"></video>
 
       <div class="video-container absolute bottom-1 paused w-full" data-volume-level="high">
         <img class="thumbnail-img">
@@ -67,10 +73,7 @@
         </div>
 
       </div>
-      <div class="">
-        <i class="ri-play-fill text-white "></i>
-      </div>
-      <video class="w-full object-contain" src="<%=videoUrl%>"></video>
+
 
     </div>
     <div class="videodescription overflow-y-auto w-full flex flex-col gap-4  py-4">
@@ -90,9 +93,10 @@
           </div>
           <%if(video.user.username !== loggedUser.username){%>
             <button onclick="subscribe(this,`<%=video.user._id%>`)"
-              class="py-1.5 ml-5 px-4 bg-zinc-200 rounded-3xl font-medium">
-              <i class="ri-notification-3-line"></i>
-              <h3 class="inline-block">
+              class=" relative py-1.5 ml-5 px-4 bg-zinc-200 rounded-3xl font-medium overflow-hidden transition-all <%=loggedUser.subscribed.includes(video.user._id) ? 'text-white' : '' %>">
+              <div class="overlay h-full w-full absolute z-[0] top-0 left-0 bg-black rounded-3xl <%=loggedUser.subscribed.includes(video.user._id) ? 'opacity-1 -translate-x-0' : 'opacity-0 -translate-x-full' %> "></div>
+              <i class="ri-notification-3-line relative"></i>
+              <h3 class="inline-block relative">
                 <%=loggedUser.subscribed.includes(video.user._id) ? 'Subscribed' : 'Subscribe' %>
               </h3>
             </button>
@@ -243,8 +247,18 @@
       fetch(`/subscribe/${userid}`)
         .then((res) => res.json())
         .then(function (res) {
+          if(res){
+            elem.style.color = 'white'
+        elem.querySelector('.overlay').style.transform = 'translateX(0)'
+        elem.querySelector('.overlay').style.opacity = '1'
+          }else{
+            elem.style.color = 'black'
+        elem.querySelector('.overlay').style.transform = 'translateX(-100%)'
+        elem.querySelector('.overlay').style.opacity = '0'
+          }
           elem.parentNode.querySelector('.profile button h3').textContent = (res) ? 'Subscribed' : 'Subscribe'
         })
+   
     }
 
     function watchlater(elem, videoid) {
@@ -343,7 +357,6 @@
       }).then((response) => {
         btn.parentNode.querySelector('.replies').innerHTML = ''
         response.data.forEach(response => {
-
           btn.parentNode.querySelector('.replies').innerHTML += ` 
           <div class="comment flex gap-1 mt-5 w-full">
               <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full overflow-hidden">

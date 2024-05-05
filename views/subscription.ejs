@@ -11,7 +11,7 @@
                     <div class="w-[25.5vw] mr-5 pb-8 playlist relative">
                         <div class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 "></div>
                         <div class="h-56 w-[98%] rounded-xl -top-1  absolute left-1/2 -translate-x-1/2 bg-zinc-400 "></div>
-                        <video class="rounded-xl relative h-56 bg-zinc-200 mb-2" src="">
+                        <video class="rounded-xl relative h-56 bg-zinc-200 mb-2 w-full object-cover" poster="/uploads/images/<%=video.videos[0].thumbnail%>" src="">
                         </video>
         
                         <h2 class="leading-tight">
@@ -33,7 +33,8 @@
                 <%}else{%>
                     <a href="/openVideo/<%=video.title%>">
                         <div class="w-[25.5vw] pb-8 mr-5 video">
-                            <div class="rounded-xl h-56 bg-zinc-200 mb-2">
+                            <div class="rounded-xl h-56 bg-zinc-200 mb-2 overflow-hidden">
+                                <img class="h-full w-full object-cover" src="/uploads/images/<%=video.thumbnail%>" alt="">
                             </div>
                             <a href="/channel/<%=video.user.username%>">
                                 <h2 class="leading-tight">

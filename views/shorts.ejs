@@ -76,14 +76,18 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 
+        let flag=0;
+
         document.querySelector(".short-container").addEventListener("wheel", function (dets) {
             if (dets.target.parentNode === document.querySelector('.short-container')) {
                 let rightElement = document.querySelector('.right');
-                if (dets.wheelDeltaY < 0) {
+                if (dets.wheelDeltaY < 0 && flag===0) {
                     rightElement.scrollTop = rightElement.scrollHeight;
                     setTimeout(()=>{
+                        flag=0;
                         window.location.href =`/shorts/<%=index%>/`
                     },1200)
+                    flag=1;
                 }
             }
         })
