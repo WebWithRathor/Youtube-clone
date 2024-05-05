@@ -26,7 +26,7 @@ This project is a YouTube clone web application built using Node.js, MongoDB, an
 1. Clone this repository:
 
    ```
-   git clone https://github.com/your-username/youtube-clone.git
+   git clone https://github.com/WebWithRathor/Youtube-clone.git
    ```
 
 2. Install dependencies:
@@ -47,7 +47,7 @@ This project is a YouTube clone web application built using Node.js, MongoDB, an
 4. Start the server:
 
    ```
-   npm start
+   npx nodemon
    ```
 
 5. Access the application at `http://localhost:3000`.
